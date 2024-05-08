@@ -8,7 +8,15 @@ const Button = ({ onClick, name }) => {
 
 const StatisticLine = ({ text, value }) => {
   return (
-    <div>{text} {value}</div>
+    <table>
+      <tbody>
+        <tr>
+          <td> {text} </td>
+          <td> {value}</td>
+        </tr>
+      </tbody >
+    </table>
+
   );
 }
 
