@@ -15,14 +15,24 @@ const App = () => {
   const [selected, setSelected] = useState(0)
   const randomNumberRange = (min, max) => {
     const randomNumber = Math.floor(Math.random() * (max - min + 1)) + min;
-    console.log(randomNumber);
     setSelected(randomNumber);
   };
+
+  const [points, setPoints] = useState({ 0: 0, 1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0, 7: 0 });
+
+  const setVotes = (n) => {
+    const copy = { ...points }
+    setPoints({ ...copy, [n]: copy[n] + 1 });
+  }
+
 
   return (
     <div>
       {anecdotes[selected]}
       <div></div>
+      has {points[selected]} votes
+      <div></div>
+      <button onClick={() => { setVotes(selected) }}>vote</button>
       <button onClick={() => { randomNumberRange(0, anecdotes.length - 1) }}>next anecdote</button>
     </div>
   );
