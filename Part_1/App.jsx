@@ -7,7 +7,11 @@ const Button = ({ onClick, name }) => {
 }
 
 const Statistics = ({ name, value }) => {
-  return <div>{name} {value}</div>
+  if (value) {
+    return <div>{name} {value}</div>
+  }
+  return <div></div>
+
 }
 
 const App = () => {
@@ -33,6 +37,7 @@ const App = () => {
         <Statistics name={'all'} value={good + neutral + bad} />
         <Statistics name={'average'} value={((good - bad) / (good + neutral + bad) || 0)} />
         <Statistics name={'positive'} value={(good / (good + neutral + bad) || 0)} />
+        {(!good && !bad && !neutral) ? <div>No feedback given</div> : <></>}
       </div>
     </div>
 
