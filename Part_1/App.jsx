@@ -1,5 +1,17 @@
 import { useState } from 'react'
 
+
+const LargestVote = ({ anecdotes, largest, largestElement }) => {
+  return (
+    <div>
+      <h1>Anecdote with most votes</h1>
+      {anecdotes[largestElement]}
+      <div></div>
+      has {largest} votes
+    </div>
+  )
+};
+
 const App = () => {
   const anecdotes = [
     'If it hurts, do it more often.',
@@ -17,14 +29,17 @@ const App = () => {
     const randomNumber = Math.floor(Math.random() * (max - min + 1)) + min;
     setSelected(randomNumber);
   };
+  const [largest, setLargest] = useState(0);
+  const [largestElement, setLargestElement] = useState(0);
 
   const [points, setPoints] = useState({ 0: 0, 1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0, 7: 0 });
-
   const setVotes = (n) => {
-    const copy = { ...points }
-    setPoints({ ...copy, [n]: copy[n] + 1 });
+    const updatedPoints = { ...points, [n]: points[n] + 1 };
+    setPoints(updatedPoints);
+    const sortedObj = Object.entries(updatedPoints).sort((a, b) => b[1] - a[1]);
+    setLargest(sortedObj[0][1]);
+    setLargestElement(sortedObj[0][0])
   }
-
 
   return (
     <div>
@@ -32,8 +47,10 @@ const App = () => {
       <div></div>
       has {points[selected]} votes
       <div></div>
-      <button onClick={() => { setVotes(selected) }}>vote</button>
+      <button onClick={() => { setVotes(selected); }}>vote</button>
       <button onClick={() => { randomNumberRange(0, anecdotes.length - 1) }}>next anecdote</button>
+      <div></div>
+      <LargestVote anecdotes={anecdotes} largest={largest} largestElement={largestElement} />
     </div>
   );
 }
