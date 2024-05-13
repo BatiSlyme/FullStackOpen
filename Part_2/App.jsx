@@ -27,6 +27,7 @@ const App = () => {
     <div>
       <Header course={course} />
       <Course course={course} />
+      {'total of ' + course.parts.reduce((sum, order) => sum + order.exercises, 0) + ' exercises'}
     </div>
   );
 }
