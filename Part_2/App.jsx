@@ -7,6 +7,11 @@ const App = () => {
   const [newName, setNewName] = useState('');
   const addName = (event) => {
     event.preventDefault();
+    
+    if (persons.some(persons => persons.name === newName)) {
+      alert(`${newName} is already added to phonebook`)
+      return;
+    }
 
     if (newName !== '') {
       const personsCopy = [...persons];
