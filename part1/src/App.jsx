@@ -14,7 +14,7 @@ const App = () => {
 
   useEffect(() => {
     personService.getAll().then((response) => setPersons(response));
-  }, []);
+  }, [persons]);
 
   const submit = (event) => {
     event.preventDefault();
