@@ -54,6 +54,12 @@ const App = () => {
           setTimeout(() => {
             setErrorMessage(null)
           }, 5000);
+        }).
+        catch(error => {
+          setErrorMessage(`infromation of ${newName} has already been removed from the server/not found`);
+          setTimeout(() => {
+            setErrorMessage(null);
+          }, 5000);
         });
       return;
     }
@@ -69,7 +75,7 @@ const App = () => {
         setPhoneNumber('');
         setErrorMessage(`${newName} has been added to the phonebook`);
         setTimeout(() => {
-          setErrorMessage(null)
+          setErrorMessage(null);
         }, 5000);
       });
     }
