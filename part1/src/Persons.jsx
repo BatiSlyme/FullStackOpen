@@ -19,7 +19,7 @@ const Persons = ({ persons, filterName }) => {
         if (re.test(f.name.toLocaleLowerCase())) {
             return f;
         }
-    }).map((f, i) => <li key={i}>{f.name} {f.number} <DeleteBtn id={f} /> </li>)}
+    }).map((f, i) => <li className="person" key={i}>{f.name} {f.number} <DeleteBtn id={f} /> </li>)}
     </ul>);
 };
 
