@@ -20,17 +20,21 @@ const App = () => {
     event.preventDefault();
 
     if (persons.some(persons => persons.name === newName)) {
-      alert(`${newName} is already added to phonebook`)
+      confirm(`${newName} is already in the phonebook, replace the old phone number with a new one?`);
+      personService.
+        update(persons.find(f => f.name === newName).id, { name: newName, number: phoneNumber }).
+        then(response => {
+          console.log(`updated ${response}`);
+          setNewName('');
+          setPhoneNumber('');
+        });
       return;
     }
-
 
     if (newName !== '') {
       const personsCopy = [...persons];
       personsCopy.push({ name: newName, number: phoneNumber });
-
-      const request = axios.post(baseUrl, { name: newName, number: phoneNumber });
-      request.then(response => {
+      personService.create({ name: newName, number: phoneNumber }).then((response) => {
         console.log('created new ', response.data);
         response.data;
         setPersons(personsCopy);
