@@ -29,6 +29,11 @@ app.get('/api/persons', (request, response) => {
     response.json(persons)
 });
 
+app.get('/api/info', (request, response) => {
+    const count = persons.length;
+    response.send(`<br><p>Phonebook has info for ${count} people</p><p>${new Date()}</p></br>`);
+});
+
 // let notes = [
 //     {
 //         id: 1,
