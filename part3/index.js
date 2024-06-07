@@ -2,7 +2,7 @@ const express = require('express');
 const app = express();
 app.use(express.json());
 
-let people = [
+let persons = [
     {
         "id": 1,
         "name": "Arto Hellas",
@@ -25,8 +25,8 @@ let people = [
     }
 ];
 
-app.get('/api/people', (request, response) => {
-    response.json(people)
+app.get('/api/persons', (request, response) => {
+    response.json(persons)
 });
 
 // let notes = [
