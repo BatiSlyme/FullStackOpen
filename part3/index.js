@@ -25,6 +25,13 @@ let persons = [
     }
 ];
 
+const generateId = () => {
+    const maxId = persons.length > 0
+        ? Math.max(...persons.map(n => n.id))
+        : 0;
+    return maxId + 1;
+};
+
 app.get('/api/persons', (request, response) => {
     response.json(persons)
 });
@@ -51,6 +58,24 @@ app.delete('/api/persons/:id', (request, response) => {
     response.status(204).end();
 });
 
+app.post('/api/persons', (request, response) => {
+    const body = request.body;
+    console.log(body);
+    if (!body.number || !body.name) {
+        return response.status(400).json({ error: 'content missing' });
+    }
+
+    const person = {
+        id: generateId(),
+        name: body.name,
+        number: body.number,
+    };
+
+    persons = persons.concat(person);
+    response.json(person);
+});
+
+
 // let notes = [
 //     {
 //         id: 1,
@@ -69,12 +94,7 @@ app.delete('/api/persons/:id', (request, response) => {
 //     }
 // ];
 
-// const generateId = () => {
-//     const maxId = notes.length > 0
-//         ? Math.max(...notes.map(n => n.id))
-//         : 0;
-//     return maxId + 1;
-// };
+
 
 // app.get('/', (request, response) => {
 //     response.send('<h1>Hello World!</h1>')
@@ -86,7 +106,7 @@ app.delete('/api/persons/:id', (request, response) => {
 
 
 
-// pp.post('/api/notes', (request, response) => {
+// app.post('/api/notes', (request, response) => {
 //     const body = request.body;
 
 //     if (!body.content) {
