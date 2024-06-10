@@ -1,7 +1,8 @@
 const express = require('express');
 const app = express();
 var morgan = require('morgan');
-app.use(morgan('combined'));
+app.use(express.json());
+app.use(morgan(':method :url :status :res[content-length] - :response-time ms :body'));
 
 let persons = [
     {
@@ -33,39 +34,39 @@ const generateId = () => {
     return maxId + 1;
 };
 
-app.get('/api/persons', (request, response) => {
-    response.json(persons)
+app.get('/api/persons', (req, res) => {
+    res.json(persons)
 });
 
-app.get('/api/info', (request, response) => {
+app.get('/api/info', (req, res) => {
     const count = persons.length;
-    response.send(`<br><p>Phonebook has info for ${count} people</p><p>${new Date()}</p></br>`);
+    res.send(`<br><p>Phonebook has info for ${count} people</p><p>${new Date()}</p></br>`);
 });
 
-app.get('/api/persons/:id', (request, response) => {
-    const id = Number(request.params.id);
+app.get('/api/persons/:id', (req, res) => {
+    const id = Number(req.params.id);
     const person = persons.find(person => person.id === id);
 
     if (person) {
-        response.json(person);
+        res.json(person);
     } else {
-        response.status(404).end();
+        res.status(404).end();
     }
 });
 
-app.delete('/api/persons/:id', (request, response) => {
-    const id = Number(request.params.id);
+app.delete('/api/persons/:id', (req, res) => {
+    const id = Number(req.params.id);
     persons = persons.filter(person => person.id !== id);
-    response.status(204).end();
+    res.status(204).end();
 });
 
-app.post('/api/persons', (request, response) => {
-    const body = request.body;
+app.post('/api/persons', (req, res) => {
+    const body = req.body;
     console.log(body);
     if (!body.number || !body.name) {
-        return response.status(400).json({ error: 'content missing' });
+        return res.status(400).json({ error: 'content missing' });
     } else if (persons.some(person => person.name === body.name)) {
-        return response.status(400).json({ error: 'name must be unique' });
+        return res.status(400).json({ error: 'name must be unique' });
     }
 
     const person = {
@@ -75,7 +76,9 @@ app.post('/api/persons', (request, response) => {
     };
 
     persons = persons.concat(person);
-    response.json(person);
+    res.json(person);
+
+    morgan.token('body', request => JSON.stringify(request.body));
 });
 
 
