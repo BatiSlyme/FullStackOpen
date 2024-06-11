@@ -2,6 +2,7 @@ const express = require('express');
 const app = express();
 var morgan = require('morgan');
 const cors = require('cors')
+app.use(express.static('dist'))
 
 // app.use(express.json());
 // app.use(express.static('dist'));
@@ -29,6 +30,20 @@ let persons = [
         "number": "39-23-6423122"
     }
 ];
+
+app.use(express.static('dist'))
+
+const requestLogger = (request, response, next) => {
+    console.log('Method:', request.method);
+    console.log('Path:  ', request.path);
+    console.log('Body:  ', request.body);
+    console.log('---');
+    next();
+};
+
+app.use(cors());
+app.use(express.json());
+app.use(requestLogger);
 
 const generateId = () => {
     const maxId = persons.length > 0
@@ -159,5 +174,5 @@ app.post('/api/persons', (req, res) => {
 
 const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
+    console.log(`Server running on port ${PORT}`);
 });
