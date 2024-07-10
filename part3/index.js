@@ -109,7 +109,7 @@ app.post('/api/persons', (req, res) => {
     })
 
     person.save().then(savedPerson => {
-        response.json(savedPerson)
+        res.json(savedPerson)
     })
 
     // morgan.token('body', request => JSON.stringify(request.body));
