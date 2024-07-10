@@ -1,8 +1,10 @@
+require('dotenv').config();
 const express = require('express');
 const app = express();
 var morgan = require('morgan');
-const cors = require('cors')
-app.use(express.static('dist'))
+const cors = require('cors');
+app.use(express.static('dist'));
+const Person = require('./mongo.js')
 // app.use(express.json());
 // app.use(express.static('dist'));
 // app.use(morgan(':method :url :status :res[content-length] - :response-time ms :body'));
@@ -52,7 +54,10 @@ const generateId = () => {
 };
 
 app.get('/api/persons', (req, res) => {
-    res.json(persons)
+    Person.find({}).then(person => {
+        res.json(person)
+    })
+    // res.json(person)
 });
 
 app.get('/api/info', (req, res) => {
@@ -61,14 +66,17 @@ app.get('/api/info', (req, res) => {
 });
 
 app.get('/api/persons/:id', (req, res) => {
-    const id = Number(req.params.id);
-    const person = persons.find(person => person.id === id);
+    // const id = Number(req.params.id);
+    // const person = persons.find(person => person.id === id);
 
-    if (person) {
+    // if (person) {
+    //     res.json(person);
+    // } else {
+    //     res.status(404).end();
+    // }
+    Person.findById(req.params.id).then(person => {
         res.json(person);
-    } else {
-        res.status(404).end();
-    }
+    });
 });
 
 app.delete('/api/persons/:id', (req, res) => {
@@ -86,14 +94,23 @@ app.post('/api/persons', (req, res) => {
         return res.status(400).json({ error: 'name must be unique' });
     }
 
-    const person = {
-        id: generateId(),
+    // const person = {
+    //     id: generateId(),
+    //     name: body.name,
+    //     number: body.number,
+    // };
+
+    // persons = persons.concat(person);
+    // res.json(person);
+
+    const person = new Person({
         name: body.name,
         number: body.number,
-    };
+    })
 
-    persons = persons.concat(person);
-    res.json(person);
+    person.save().then(savedPerson => {
+        response.json(savedPerson)
+    })
 
     // morgan.token('body', request => JSON.stringify(request.body));
 });
@@ -171,7 +188,7 @@ app.post('/api/persons', (req, res) => {
 //     response.status(204).end();
 // });
 
-const PORT = process.env.PORT || 3001;
+const PORT = process.env.PORT
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
 });
