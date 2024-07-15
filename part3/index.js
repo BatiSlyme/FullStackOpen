@@ -46,6 +46,18 @@ app.use(cors());
 app.use(express.json());
 app.use(requestLogger);
 
+const errorHandler = (error, request, response, next) => {
+    console.error(error.message)
+
+    if (error.name === 'CastError') {
+        return response.status(400).send({ error: 'malformatted id' })
+    }
+
+    next(error)
+}
+
+
+
 const generateId = () => {
     const maxId = persons.length > 0
         ? Math.max(...persons.map(n => n.id))
@@ -65,7 +77,7 @@ app.get('/api/info', (req, res) => {
     res.send(`<br><p>Phonebook has info for ${count} people</p><p>${new Date()}</p></br>`);
 });
 
-app.get('/api/persons/:id', (req, res) => {
+app.get('/api/persons/:id', (req, res, next) => {
     // const id = Number(req.params.id);
     // const person = persons.find(person => person.id === id);
 
@@ -74,15 +86,27 @@ app.get('/api/persons/:id', (req, res) => {
     // } else {
     //     res.status(404).end();
     // }
-    Person.findById(req.params.id).then(person => {
-        res.json(person);
-    });
+    Person.findById(String(req.params.id ?? '')).then(person => {
+        if (person) {
+            res.json(person);
+        } else {
+            res.status(404).end();
+        }
+    }).catch(error => next(error)
+        // {
+        //     console.log(error);
+        //     res.status(400).send({ error: 'malformatted id' })
+        // }
+    );
 });
 
 app.delete('/api/persons/:id', (req, res) => {
-    const id = Number(req.params.id);
-    persons = persons.filter(person => person.id !== id);
-    res.status(204).end();
+    const id = String(req.params.id);
+    Person.findByIdAndDelete(id)
+        .then(result => { res.status(204).end(); console.log('deleted'); })
+        .catch(error => next(error));
+    // persons = persons.filter(person => person.id !== id);
+
 });
 
 app.post('/api/persons', (req, res) => {
@@ -115,6 +139,33 @@ app.post('/api/persons', (req, res) => {
     // morgan.token('body', request => JSON.stringify(request.body));
 });
 
+app.put('/api/persons/:id', (req, res) => {
+    const body = req.body;
+    console.log(body);
+    if (!body.number || !body.name) {
+        return res.status(400).json({ error: 'content missing' });
+    } else if (persons.some(person => person.name === body.name)) {
+        return res.status(400).json({ error: 'name must be unique' });
+    }
+
+    const person = new Person({
+        name: body.name,
+        number: body.number,
+    })
+
+    person.save().then(savedPerson => {
+        res.json(savedPerson)
+    })
+
+    Person.findByIdAndDelete(req.params.id, person, { new: true })
+        .then(result => {
+            res.json(result)
+        })
+        .catch(error => next(error));
+
+
+    // morgan.token('body', request => JSON.stringify(request.body));
+});
 
 // let notes = [
 //     {
@@ -187,7 +238,7 @@ app.post('/api/persons', (req, res) => {
 //     notes = notes.filter(note => note.id !== id);
 //     response.status(204).end();
 // });
-
+app.use(errorHandler);
 const PORT = process.env.PORT
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
