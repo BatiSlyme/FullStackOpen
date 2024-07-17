@@ -48,6 +48,7 @@ const App = () => {
         update(persons.find(f => f.name === newName).id, { name: newName, number: phoneNumber }).
         then(response => {
           console.log(`updated ${response}`);
+          personService.getAll().then((response) => setPersons(response));
           setNewName('');
           setPhoneNumber('');
           setErrorMessage(`${newName}'s number has been updated`);
@@ -110,7 +111,7 @@ const App = () => {
         phoneNumber={phoneNumber}
       />
       <h2>Numbers</h2>
-      <Persons persons={persons} filterName={filterName} setErrorMessage={() => { setErrorMessage }} />
+      <Persons persons={persons} filterName={filterName} setPersons={() => { setPersons }} setErrorMessage={() => { setErrorMessage }} />
       <Footer />
     </div>
   );

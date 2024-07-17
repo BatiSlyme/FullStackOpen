@@ -1,9 +1,12 @@
 import personService from "./services/personService";
 
-const deletePerson = (person, setErrorMessage) => {
+const deletePerson = (person, setErrorMessage, setPersons, persons) => {
     confirm(`Are you sure you want to delete ${person.name}?`);
     personService.deletePerson(person.id).then((response) => {
-        console.log(person.name + ' deleted')
+        let personCopy = [...persons];
+        personCopy = personCopy.filter(f => f.id !== person.id);
+        setPersons(personCopy);
+        console.log(person.name + ' deleted');
         setErrorMessage(`${person.name} has been deleted`);
         setTimeout(() => {
             setErrorMessage(null)
@@ -11,21 +14,21 @@ const deletePerson = (person, setErrorMessage) => {
     }).catch(error => console.log(error));
 }
 
-const DeleteBtn = ({ id, setErrorMessage }) => {
+const DeleteBtn = ({ id, setErrorMessage, setPersons, persons }) => {
     return (
-        <button onClick={() => { deletePerson(id, setErrorMessage) }}>
+        <button onClick={() => { deletePerson(id, setErrorMessage, setPersons, persons) }}>
             delete
         </button >
     );
 };
 
-const Persons = ({ persons, filterName, setErrorMessage }) => {
+const Persons = ({ persons, filterName, setErrorMessage, setPersons }) => {
     return (<ul>{persons.filter(f => {
         let re = new RegExp(`${filterName}`);
         if (re.test(f.name.toLocaleLowerCase())) {
             return f;
         }
-    }).map((f, i) => <li className="person" key={i}>{f.name} {f.number} <DeleteBtn id={f} setErrorMessage={setErrorMessage} /> </li>)}
+    }).map((f, i) => <li className="person" key={i}>{f.name} {f.number} <DeleteBtn id={f} setErrorMessage={setErrorMessage} setPersons={setPersons} persons={persons} /> </li>)}
     </ul>);
 };
 
