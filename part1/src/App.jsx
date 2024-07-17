@@ -67,8 +67,8 @@ const App = () => {
     if (newName !== '') {
       const personsCopy = [...persons];
       personService.create({ name: newName, number: phoneNumber }).then((response) => {
-        console.log('created new ', response.data);
-        personsCopy.push(response.data);
+        console.log('created new ', response);
+        personsCopy.push(response);
         setPersons(personsCopy);
         setNewName('');
         setPhoneNumber('');
