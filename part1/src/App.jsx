@@ -67,8 +67,8 @@ const App = () => {
     if (newName !== '') {
       const personsCopy = [...persons];
       personService.create({ name: newName, number: phoneNumber }).then((response) => {
-        console.log('created new ', response.data);
-        personsCopy.push(response.data);
+        console.log('created new ', response);
+        personsCopy.push(response);
         setPersons(personsCopy);
         setNewName('');
         setPhoneNumber('');
@@ -76,6 +76,8 @@ const App = () => {
         setTimeout(() => {
           setErrorMessage(null);
         }, 5000);
+      }).catch(error => {
+        console.log(error.response.data.error);
       });
     }
   };
@@ -108,7 +110,7 @@ const App = () => {
         phoneNumber={phoneNumber}
       />
       <h2>Numbers</h2>
-      <Persons persons={persons} filterName={filterName} />
+      <Persons persons={persons} filterName={filterName} setErrorMessage={() => { setErrorMessage }} />
       <Footer />
     </div>
   );
