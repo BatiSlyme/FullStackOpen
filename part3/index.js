@@ -116,6 +116,10 @@ app.post('/api/persons', (req, res, next) => {
     if (!body.number || !body.name) {
         return res.status(400).json({ error: 'content missing' });
     }
+    const person = new Person({
+        name: body.name,
+        number: body.number,
+    });
 
     person.save().then(savedPerson => {
         res.json(savedPerson)
