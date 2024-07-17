@@ -37,7 +37,7 @@ const App = () => {
 
   useEffect(() => {
     personService.getAll().then((response) => setPersons(response));
-  }, [persons]);
+  }, []);
 
   const submit = (event) => {
     event.preventDefault();
@@ -66,10 +66,9 @@ const App = () => {
 
     if (newName !== '') {
       const personsCopy = [...persons];
-      personsCopy.push({ name: newName, number: phoneNumber });
       personService.create({ name: newName, number: phoneNumber }).then((response) => {
         console.log('created new ', response.data);
-        response.data;
+        personsCopy.push(response.data);
         setPersons(personsCopy);
         setNewName('');
         setPhoneNumber('');
