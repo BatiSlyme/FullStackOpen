@@ -47,16 +47,17 @@ app.use(express.json());
 app.use(requestLogger);
 
 const errorHandler = (error, request, response, next) => {
-    console.error(error.message)
+    console.error(error.message);
 
     if (error.name === 'CastError') {
-        return response.status(400).send({ error: 'malformatted id' })
+        return response.status(400).send({ error: 'malformatted id' });
+    }
+    else if (error.name === 'ValidationError') {
+        return response.status(400).json({ error: error.message });
     }
 
-    next(error)
+    next(error);
 }
-
-
 
 const generateId = () => {
     const maxId = persons.length > 0
@@ -67,7 +68,7 @@ const generateId = () => {
 
 app.get('/api/persons', (req, res) => {
     Person.find({}).then(person => {
-        res.json(person)
+        res.json(person);
     })
     // res.json(person)
 });
@@ -133,14 +134,12 @@ app.put('/api/persons/:id', (req, res, next) => {
         number: body.number,
     };
 
-Person.findByIdAndUpdate(req.params.id, person, { new: true, runValidators: true, context: 'query' })
-    .then(result => {
-        res.json(result).end();
-    })
-    .catch(error => next(error));
+    Person.findByIdAndUpdate(req.params.id, person, { new: true, runValidators: true, context: 'query' })
+        .then(result => {
+            res.json(result).end();
+        })
+        .catch(error => next(error));
 });
-
-
 
 app.use(errorHandler);
 const PORT = process.env.PORT
