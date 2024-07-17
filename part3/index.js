@@ -122,7 +122,7 @@ app.post('/api/persons', (req, res, next) => {
     });
 
     person.save().then(savedPerson => {
-        res.json(savedPerson)
+        res.json(savedPerson);
     }).catch(error => next(error));
 
 });
