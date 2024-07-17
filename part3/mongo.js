@@ -29,8 +29,7 @@ personSchema.set('toJSON', {
     }
 });
 
-const Person = mongoose.model('Person', personSchema);
-
+// const Person = mongoose.model('Person', personSchema);
 
 // if (name && number) {
 //     const person = new Person({

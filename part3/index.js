@@ -100,7 +100,7 @@ app.get('/api/persons/:id', (req, res, next) => {
     );
 });
 
-app.delete('/api/persons/:id', (req, res) => {
+app.delete('/api/persons/:id', (req, res, next) => {
     const id = String(req.params.id);
     Person.findByIdAndDelete(id)
         .then(result => { res.status(204).end(); console.log('deleted'); })
@@ -109,135 +109,39 @@ app.delete('/api/persons/:id', (req, res) => {
 
 });
 
-app.post('/api/persons', (req, res) => {
+app.post('/api/persons', (req, res, next) => {
     const body = req.body;
     console.log(body);
     if (!body.number || !body.name) {
         return res.status(400).json({ error: 'content missing' });
-    } else if (persons.some(person => person.name === body.name)) {
-        return res.status(400).json({ error: 'name must be unique' });
     }
-
-    // const person = {
-    //     id: generateId(),
-    //     name: body.name,
-    //     number: body.number,
-    // };
-
-    // persons = persons.concat(person);
-    // res.json(person);
-
-    const person = new Person({
-        name: body.name,
-        number: body.number,
-    })
 
     person.save().then(savedPerson => {
         res.json(savedPerson)
-    })
+    }).catch(error => next(error));
 
-    // morgan.token('body', request => JSON.stringify(request.body));
 });
 
-app.put('/api/persons/:id', (req, res) => {
+app.put('/api/persons/:id', (req, res, next) => {
     const body = req.body;
-    console.log(body);
-    if (!body.number || !body.name) {
-        return res.status(400).json({ error: 'content missing' });
-    } else if (persons.some(person => person.name === body.name)) {
-        return res.status(400).json({ error: 'name must be unique' });
-    }
+    console.log('body', body);
+    console.log('req.params', req.params);
+    console.log('id', req.params.id, typeof req.params.id);
 
-    const person = new Person({
+    const person = {
         name: body.name,
         number: body.number,
+    };
+
+Person.findByIdAndUpdate(req.params.id, person, { new: true, runValidators: true, context: 'query' })
+    .then(result => {
+        res.json(result).end();
     })
-
-    person.save().then(savedPerson => {
-        res.json(savedPerson)
-    })
-
-    Person.findByIdAndDelete(req.params.id, person, { new: true })
-        .then(result => {
-            res.json(result)
-        })
-        .catch(error => next(error));
-
-
-    // morgan.token('body', request => JSON.stringify(request.body));
+    .catch(error => next(error));
 });
 
-// let notes = [
-//     {
-//         id: 1,
-//         content: "HTML is easy",
-//         important: true
-//     },
-//     {
-//         id: 2,
-//         content: "Browser can execute only JavaScript",
-//         important: false
-//     },
-//     {
-//         id: 3,
-//         content: "GET and POST are the most important methods of HTTP protocol",
-//         important: true
-//     }
-// ];
 
 
-
-// app.get('/', (request, response) => {
-//     response.send('<h1>Hello World!</h1>')
-// });
-
-// app.get('/api/notes', (request, response) => {
-//     response.json(notes)
-// });
-
-
-
-// app.post('/api/notes', (request, response) => {
-//     const body = request.body;
-
-//     if (!body.content) {
-//       return response.status(400).json({ 
-//         error: 'content missing' 
-//       });
-//     };
-
-//     const note = {
-//       content: body.content,
-//       important: Boolean(body.important) || false,
-//       id: generateId(),
-//     };
-
-//     notes = notes.concat(note);
-
-//     response.json(note);
-//   });
-
-// app.get('/api/notes/:id', (request, response) => {
-//     const id = Number(request.params.id);
-//     console.log(id);
-
-//     const note = notes.find(note => {
-//         console.log(note.id, typeof note.id, id, typeof id, note.id === id)
-//         return note.id === id
-//     });
-
-//     if (note) {
-//         response.json(note);
-//     } else {
-//         response.status(404).end();
-//     }
-// });
-
-// app.delete('/api/notes/:id', (request, response) => {
-//     const id = Number(request.params.id);
-//     notes = notes.filter(note => note.id !== id);
-//     response.status(204).end();
-// });
 app.use(errorHandler);
 const PORT = process.env.PORT
 app.listen(PORT, () => {
