@@ -5,13 +5,19 @@ const deletePerson = (person, setErrorMessage, setPersons, persons) => {
     personService.deletePerson(person.id).then((response) => {
         let personCopy = [...persons];
         personCopy = personCopy.filter(f => f.id !== person.id);
+        console.log(personCopy);
         setPersons(personCopy);
         console.log(person.name + ' deleted');
-        setErrorMessage(`${person.name} has been deleted`);
+        setErrorMessage({ msg: `${person.name} has been deleted`, type: 'success' });
         setTimeout(() => {
             setErrorMessage(null)
         }, 5000);
-    }).catch(error => console.log(error));
+    }).catch(error => {
+        setErrorMessage({ msg: error.response.data.error, type: 'error' });
+        setTimeout(() => {
+            setErrorMessage(null);
+        }, 5000);
+    });
 }
 
 const DeleteBtn = ({ id, setErrorMessage, setPersons, persons }) => {

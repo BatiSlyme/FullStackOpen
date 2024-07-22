@@ -19,12 +19,21 @@ const Footer = () => {
   )
 }
 
-const Notifications = ({ msg }) => {
-  return (msg ?
-    <div className='success'>
-      {msg}
-    </div> :
-    <div></div>
+const Notifications = ({ notification }) => {
+  return (
+    notification
+      ?
+      notification.type === 'error'
+        ?
+        <div className='error'>
+          {msg}
+        </div>
+        :
+        <div className='success'>
+          {msg}
+        </div>
+      :
+      <div></div>
   );
 };
 
@@ -51,13 +60,13 @@ const App = () => {
           personService.getAll().then((response) => setPersons(response));
           setNewName('');
           setPhoneNumber('');
-          setErrorMessage(`${newName}'s number has been updated`);
+          setErrorMessage({ msg: `${newName}'s number has been updated`, type: success });
           setTimeout(() => {
             setErrorMessage(null)
           }, 5000);
         }).
         catch(error => {
-          setErrorMessage(`infromation of ${newName} has already been removed from the server/not found`);
+          setErrorMessage({ msg: error.response.data.error, type: 'error' });
           setTimeout(() => {
             setErrorMessage(null);
           }, 5000);
@@ -73,12 +82,16 @@ const App = () => {
         setPersons(personsCopy);
         setNewName('');
         setPhoneNumber('');
-        setErrorMessage(`${newName} has been added to the phonebook`);
+        setErrorMessage({ msg: `${newName} has been added to the phonebook`, type: success });
         setTimeout(() => {
           setErrorMessage(null);
         }, 5000);
       }).catch(error => {
-        console.log(error.response.data.error);
+        console.log('error at adding new person', error.response.data.error);
+        setErrorMessage({ msg: error.response.data.error, type: 'error' });
+        setTimeout(() => {
+          setErrorMessage(null);
+        }, 5000);
       });
     }
   };
@@ -111,7 +124,7 @@ const App = () => {
         phoneNumber={phoneNumber}
       />
       <h2>Numbers</h2>
-      <Persons persons={persons} filterName={filterName} setPersons={() => { setPersons }} setErrorMessage={() => { setErrorMessage }} />
+      <Persons persons={persons} filterName={filterName} setPersons={setPersons} setErrorMessage={setErrorMessage} />
       <Footer />
     </div>
   );
