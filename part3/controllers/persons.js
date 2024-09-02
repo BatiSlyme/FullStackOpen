@@ -36,7 +36,7 @@ personsRouter.get('/:id', (req, res, next) => {
     )
 })
 
-personsRouter.delete(':id', (req, res, next) => {
+personsRouter.delete('/:id', (req, res, next) => {
     const id = String(req.params.id)
     Person.findByIdAndDelete(id)
         .then(() => { res.status(204).end(); logger.info('deleted') })
@@ -62,7 +62,7 @@ personsRouter.post('/', (req, res, next) => {
 
 })
 
-personsRouter.put(':id', (req, res, next) => {
+personsRouter.put('/:id', (req, res, next) => {
     const body = req.body
     logger.info('body', body)
     logger.info('req.params', req.params)

@@ -1,6 +1,7 @@
+const config = require('../utils/config');
 const { mongoose } = require('mongoose')
 
-const url = process.env.MONGODB_URL
+const url = config.MONGODB_URL;
 console.log('connecting to', url)
 
 // const name = process.argv[3]
@@ -35,6 +36,7 @@ const personSchema = new mongoose.Schema({
       message: props => `${props.value} is not a valid phone number!`
     },
     length: 8,
+    
 
   },
 })
