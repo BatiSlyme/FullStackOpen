@@ -12,7 +12,7 @@ const getTokenFrom = request => {
 }
 
 blogsRouter.get('/', async (request, response) => {
-    const blogs = await Blog.find({});
+    const blogs = await Blog.find({}).populate('user', { username: 1, name: 1, id: 1 });
     if (blogs) {
         response.json(blogs);
     } else {
@@ -29,12 +29,13 @@ blogsRouter.post('/', async (request, response) => {
         return response.status(401).json({ error: 'token invalid' })
     }
     const user = await User.findById(decodedToken.id)
+    console.log('user', user);
 
     if (!req.likes) {
         req.likes = 0;
         req.user = user.id;
     }
-    
+    req.user = user;
     const blog = new Blog(req);
 
     const savedBlogs = await blog.save();

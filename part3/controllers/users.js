@@ -4,7 +4,7 @@ const User = require('../models/user');
 const logger = require('../utils/logger')
 
 usersRouter.get('/', async (req, res) => {
-    const users = await User.find({}).populate('user', { username: 1, name: 1 });
+    const users = await User.find({}).populate('blogs', { username: 1, name: 1 });
     res.json(users);
 })
 
@@ -14,10 +14,10 @@ usersRouter.get('/:id', (req, res, next) => {
 
     // if (user) {
     //     res.json(user);
-    // } else {
     //     res.status(404).end();
     // }
     User.findById(String(req.params.id ?? '')).then(user => {
+    // } else {
         if (user) {
             res.json(user)
         } else {
@@ -47,7 +47,7 @@ usersRouter.post('/', async (req, res, next) => {
     if (!password || password.length < 3) {
         return res.status(400).json({ error: 'password must be at least 3 characters long' })
     }
-    
+
     const saltRounds = 10
     const passwordHash = await bcrypt.hash(password, saltRounds)
 
