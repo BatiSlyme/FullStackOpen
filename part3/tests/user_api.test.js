@@ -1,4 +1,4 @@
-const { test, after, beforeEach } = require('node:test')
+const { test, after, beforeEach, describe } = require('node:test')
 const assert = require('node:assert')
 const { usersInDb } = require('./test_helper')
 const mongoose = require('mongoose')
@@ -34,7 +34,7 @@ describe('when there is initially one user in db', () => {
             .expect(201)
             .expect('Content-Type', /application\/json/)
 
-        const usersAtEnd = await helper.usersInDb()
+        const usersAtEnd = await usersInDb()
         assert.strictEqual(usersAtEnd.length, usersAtStart.length + 1)
 
         const usernames = usersAtEnd.map(u => u.username)
@@ -42,7 +42,7 @@ describe('when there is initially one user in db', () => {
     })
 
     test('creation fails with proper statuscode and message if username already taken', async () => {
-        const usersAtStart = await helper.usersInDb()
+        const usersAtStart = await usersInDb()
 
         const newUser = {
             username: 'root',
@@ -62,6 +62,39 @@ describe('when there is initially one user in db', () => {
         assert.strictEqual(usersAtEnd.length, usersAtStart.length)
     })
 })
+
+describe('requests for users', () => {
+    beforeEach(async () => {
+        await User.deleteMany({})
+
+        const passwordHash = await bcrypt.hash('sekret', 10)
+        const user = new User({ username: 'root', passwordHash })
+
+        await user.save()
+    });
+
+    test('creating user with password < 3 characters', async () => {
+        const usersAtStart = await usersInDb()
+
+        const newUser = {
+            username: 'mluukkai',
+            name: 'Matti Luukkainen',
+            password: 'sa',
+        }
+
+        const result = await api
+            .post('/api/users')
+            .send(newUser)
+            .expect(400)
+            .expect('Content-Type', /application\/json/)
+
+        const usersAtEnd = await usersInDb()
+        assert(result.body.error.includes('password must be at least 3 characters long'))
+
+        assert.strictEqual(usersAtEnd.length, usersAtStart.length)
+    })
+
+});
 
 after(async () => {
     await mongoose.connection.close()
