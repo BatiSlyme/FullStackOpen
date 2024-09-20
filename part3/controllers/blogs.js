@@ -49,10 +49,22 @@ blogsRouter.get('/:id', async (request, response) => {
 });
 
 blogsRouter.delete('/:id', async (req, res, next) => {
-    const id = String(req.params.id)
-    Blog.findByIdAndDelete(id)
-        .then(() => { res.status(204).end(); logger.info('deleted') })
-        .catch(error => next(error))
+    const decodedToken = jwt.verify(req.token, process.env.SECRET)
+    // const decodedToken = jwt.verify(getTokenFrom(request), process.env.SECRET)
+    if (!decodedToken.id) {
+        return response.status(401).json({ error: 'token invalid' })
+    }
+    const user = await User.findById(decodedToken.id)
+    const blog = await Blog.findById(req.params.id);
+
+    if (user.id === blog.user.toString()) {
+        const id = String(req.params.id)
+        Blog.findByIdAndDelete(id)
+            .then(() => { res.status(204).end(); logger.info('deleted') })
+            .catch(error => next(error))
+    } else {
+        res.status(401).json({ error: 'Unauthorized' })
+    }
 
 });
 
