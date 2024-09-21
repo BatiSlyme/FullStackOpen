@@ -7,21 +7,9 @@ import RecipeDetails from './RecipeDetails';
 import './App.css';
 
 const App = () => {
-  const [recipes, setRecipes] = useState([]);
   const [selectedRecipe, setSelectedRecipe] = useState(null);
-  const [setFilteredRecipes, setFilteredRecipes] = useState([]);
+  const [filteredRecipes, setFilteredRecipes] = useState([]);
   const [loading, setLoading] = useState(false);
-
-  const fetchRecipes = async (query) => {
-    setLoading(true);
-    try {
-      const titles = await axios.get(`http://localhost:3001/api/recipes`);
-      setRecipes(titles.data);
-    } catch (error) {
-      console.error("Error fetching recipes:", error);
-    }
-    setLoading(false);
-  };
 
   const selectRecipe = async (id) => {
     setLoading(true);
@@ -38,11 +26,11 @@ const App = () => {
     <div style={{ width: '100%' }} >
       <Header />
       <div className="container">
-        <Search onSearch={fetchRecipes} recipes={recipes} setFilteredRecipes={setFilteredRecipes} />
+        <Search  setFilteredRecipes={setFilteredRecipes} />
         {loading && <p>Loading...</p>}
         <div className="app-body">
           <div className="recipe-list-container">
-            <RecipeList recipes={recipes} onSelectRecipe={selectRecipe} />
+            <RecipeList recipes={filteredRecipes} onSelectRecipe={selectRecipe} />
           </div>
           {selectedRecipe && (
             <div style={{ width: '100%' }}>
