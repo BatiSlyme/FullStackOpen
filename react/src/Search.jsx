@@ -1,33 +1,40 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 
-const onSearch = async (setRecipes) => {
+const onSearch = async (setRecipes, query, setFilteredRecipes) => {
     // setLoading(true);
     try {
         const titles = await axios.get(`http://localhost:3001/api/recipes`);
-        const word = "JavaScript";
-        const regex = new RegExp(`\\b${word}\\b`, 'i');
+        const regex = new RegExp(`\\b${query}\\b`, 'i');
         const filteredRec = titles.data.map((recipe) => {
             if (regex.test(recipe.title)) {
-                return false;
+                console.log('found query', recipe.title);
+                return {
+                    id: recipe.id,
+                    title: recipe.title,
+                    content: recipe.content,
+                    likes: recipe.likes,
+                    user: recipe.user
+                };
             }
-        });
-        return true;
-        setRecipes(filteredRec);
+        }).filter(Boolean);
+        console.log('filteredRec', filteredRec);
+        setFilteredRecipes(filteredRec);
     } catch (error) {
         console.error("Error fetching recipes:", error);
     }
-    // setLoading(false);
 };
 
-const Search = ({ setFilteredReceipts }) => {
+const Search = ({ setFilteredRecipes }) => {
     const [recipes, setRecipes] = useState([]);
     const [query, setQuery] = useState('');
 
     const handleSubmit = (e) => {
         e.preventDefault();
+        console.log('query', query);
+
         if (query.trim()) {
-            onSearch(setRecipes);
+            onSearch(setRecipes, query, setFilteredRecipes);
         }
     };
 

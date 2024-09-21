@@ -26,7 +26,7 @@ const App = () => {
     <div style={{ width: '100%' }} >
       <Header />
       <div className="container">
-        <Search  setFilteredRecipes={setFilteredRecipes} />
+        <Search setFilteredRecipes={setFilteredRecipes} />
         {loading && <p>Loading...</p>}
         <div className="app-body">
           <div className="recipe-list-container">
