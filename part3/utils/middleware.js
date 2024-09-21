@@ -21,7 +21,11 @@ const tokenExtractor = (request, response, next) => {
 }
 
 const userExtractor = async (request, response, next) => {
-  const decodedToken = jwt.verify(request.token, process.env.SECRET)
+  // try {
+  const decodedToken = jwt.verify(request.token, process.env.SECRET);
+  // } catch (error) {
+  //   return response.status(401).json({ error: `${error}` });
+  // }
   // const decodedToken = jwt.verify(getTokenFrom(request), process.env.SECRET)
   if (!decodedToken.id) {
     return response.status(401).json({ error: 'token invalid' })
@@ -29,6 +33,7 @@ const userExtractor = async (request, response, next) => {
   const user = await User.findById(decodedToken.id)
   request.user = user;
   next();
+
 }
 
 const unknownEndpoint = (request, response) => {

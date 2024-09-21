@@ -1,13 +1,13 @@
 const { test, after, beforeEach } = require('node:test')
 const assert = require('node:assert')
-const { initialBlogs, blogsInDb } = require('./test_helper')
+const { initialBlogs, blogsInDb, getTokenFromLogin } = require('./test_helper')
 const mongoose = require('mongoose')
 const supertest = require('supertest')
 const app = require('../app')
 const Blog = require('../models/blog')
 
 const api = supertest(app)
-
+let token;
 
 beforeEach(async () => {
     await Blog.deleteMany({})
@@ -17,7 +17,8 @@ beforeEach(async () => {
     const promiseArray = blogObjects.map(blog => blog.save());
     await Promise.all(promiseArray);
 
-    console.log('done');
+    token = await getTokenFromLogin();
+    console.log('token', token);
 });
 
 test('blogs are returned as json', async () => {
@@ -26,6 +27,7 @@ test('blogs are returned as json', async () => {
         .get('/api/blogs')
         .expect(200)
         .expect('Content-Type', /application\/json/)
+
 });
 
 test('there are two blogs', async () => {
