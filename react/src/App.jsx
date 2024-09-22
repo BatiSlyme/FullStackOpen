@@ -32,6 +32,7 @@ const App = () => {
   useEffect(() => {
     if (filteredRecipes.length > 0) {
       setShowCreateRecipe(false);
+      setSelectedRecipe();
     }
   }, [filteredRecipes]);
 
