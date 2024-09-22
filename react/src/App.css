@@ -155,4 +155,14 @@ body {
     margin: 10px;
   }
 
+  .form-group {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+  }
+
+  .form-group label {
+    margin-right: 10px;
+  }
+
 }

@@ -9,13 +9,14 @@ import MenuIcon from '@mui/icons-material/Menu';
 import Logout from './Logout';
 import receipts from './services/receipts';
 
-const getAllRecipes = async (setReceipts) => {
+const getAllRecipes = async (setReceipts, setShowCreateRecipe) => {
     console.log(setReceipts);
+    setShowCreateRecipe(false);
     const recipes = await receipts.getReceipts()
     setReceipts(recipes);
 }
 
-export default function NavBar({ setShowLogin, userName, setUsername, setReceipts }) {
+export default function NavBar({ setShowLogin, userName, setUsername, setReceipts, setShowCreateRecipe }) {
     console.log('setReceipts', setReceipts);
     console.log('setUsername', setUsername);
     return (
@@ -31,7 +32,8 @@ export default function NavBar({ setShowLogin, userName, setUsername, setReceipt
                     >
                         <MenuIcon />
                     </IconButton>
-                    <Button style={{ color: 'white', fontWeight: 'bold' }} onClick={() => { getAllRecipes(setReceipts) }}>Recipes</Button>
+                    <Button style={{ color: 'white', fontWeight: 'bold' }} onClick={() => { getAllRecipes(setReceipts, setShowCreateRecipe) }}>Recipes</Button>
+                    {userName && <Button style={{ color: 'white', fontWeight: 'bold' }} onClick={() => { setShowCreateRecipe(true) }}>Create Recipe</Button>}
                     <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
 
                     </Typography>

@@ -7,6 +7,8 @@ import RecipeDetails from './RecipeDetails';
 import './App.css';
 import Login from './Login';
 import NavBar from './NavBar';
+import CreateRecipe from './CreateRecipe';
+import receipts from './services/receipts';
 
 const App = () => {
   const [selectedRecipe, setSelectedRecipe] = useState();
@@ -14,6 +16,7 @@ const App = () => {
   const [loading, setLoading] = useState(false);
   const [userName, setUsername] = useState();
   const [showLogin, setShowLogin] = useState(false);
+  const [showCreateRecipe, setShowCreateRecipe] = useState(false);
 
   const selectRecipe = async (id) => {
     setLoading(true);
@@ -26,27 +29,61 @@ const App = () => {
     setLoading(false);
   };
 
+  useEffect(() => {
+    if (filteredRecipes.length > 0) {
+      setShowCreateRecipe(false);
+    }
+  }, [filteredRecipes]);
+
+  useEffect(() => {
+    if (!userName) {
+      setSelectedRecipe();
+      setFilteredRecipes([]);
+      setShowCreateRecipe(false);
+    }
+  }, [userName]);
 
   return (
     <div style={{ width: '100%', }} >
       <div style={{ justifyContent: 'center', flexDirection: 'row' }}>
         <Header />
-        <NavBar setShowLogin={setShowLogin} userName={userName} setUsername={setUsername} setReceipts={setFilteredRecipes} />
-        <Login setUser={setUsername} showLogin={showLogin} setShowLogin={setShowLogin} />
+        <NavBar
+          setShowLogin={setShowLogin}
+          userName={userName}
+          setUsername={setUsername}
+          setReceipts={setFilteredRecipes}
+          setShowCreateRecipe={setShowCreateRecipe} />
+        <Login
+          setUser={setUsername}
+          showLogin={showLogin}
+          setShowLogin={setShowLogin} />
       </div>
       {/* <div className="container"> */}
-        <Search setFilteredRecipes={setFilteredRecipes} setSelectedRecipe={setSelectedRecipe} />
-        {loading && <p>Loading...</p>}
-        <div className="app-body">
-          <div className="recipe-list-container">
-            <RecipeList recipes={filteredRecipes} onSelectRecipe={selectRecipe} />
-          </div>
-          {selectedRecipe && (
-            <div style={{ width: '100%' }}>
-              <RecipeDetails recipe={selectedRecipe} />
-            </div>
-          )}
+      <Search
+        setFilteredRecipes={setFilteredRecipes}
+        setSelectedRecipe={setSelectedRecipe} />
+      {loading && <p>Loading...</p>}
+      <div className="app-body">
+        <div className="recipe-list-container">
+          {(!showCreateRecipe && filteredRecipes.length > 0) &&
+            <RecipeList
+              recipes={filteredRecipes}
+              onSelectRecipe={selectRecipe} />}
         </div>
+        {(!showCreateRecipe && selectedRecipe) && (
+          <div style={{ width: '100%' }}>
+            <RecipeDetails
+              recipe={selectedRecipe}
+            />
+          </div>
+        )}
+
+      </div>
+      {showCreateRecipe &&
+        <CreateRecipe
+          userName={userName}
+          setShowCreateRecipe={setShowCreateRecipe}
+        />}
       {/* </div> */}
     </div>
   );

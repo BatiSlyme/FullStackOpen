@@ -6,7 +6,7 @@ import CancelIcon from '@mui/icons-material/Cancel';
 import IconButton from '@mui/material/IconButton';
 import { User } from './global/user';
 
-const Login = ({  setUser, showLogin, setShowLogin }) => {
+const Login = ({ setUser, showLogin, setShowLogin }) => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
@@ -27,8 +27,8 @@ const Login = ({  setUser, showLogin, setShowLogin }) => {
             setUser(login.name);
             User.token = login.token;
             setShowLogin(false)
-            setUsername('');
-            setPassword('');
+            setUsername();
+            setPassword();
         } catch (error) {
             console.log(error);
             setError('Wrong credentials');
@@ -53,7 +53,11 @@ const Login = ({  setUser, showLogin, setShowLogin }) => {
                             color="inherit"
                             aria-label="menu"
                             sx={{ mr: 2 }}
-                            onClick={() => setShowLogin(false)}
+                            onClick={() => {
+                                setShowLogin(false);
+                                setUsername();
+                                setPassword();
+                            }}
                         >
                             <CancelIcon />
                         </IconButton>
@@ -63,6 +67,7 @@ const Login = ({  setUser, showLogin, setShowLogin }) => {
                         <div>
                             <label htmlFor="username">Username:</label>
                             <input
+                                required
                                 type="text"
                                 id="username"
                                 value={username}
@@ -72,6 +77,7 @@ const Login = ({  setUser, showLogin, setShowLogin }) => {
                         <div>
                             <label htmlFor="password">Password:</label>
                             <input
+                                required
                                 type="password"
                                 id="password"
                                 value={password}
@@ -83,7 +89,7 @@ const Login = ({  setUser, showLogin, setShowLogin }) => {
                     </form>
                 </Box>
             </Modal>
-        </div>
+        </div >
     );
 };
 

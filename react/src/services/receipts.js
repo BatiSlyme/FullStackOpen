@@ -26,7 +26,7 @@ const createReceipt = async (newReceipt) => {
     const config = {
         headers: { Authorization: `Bearer ${User.token}` },
     };
-    const response = await axios.post(`${baseUrl}/api/receipts`, newReceipt, config);
+    const response = await axios.post(`${baseUrl}/api/recipes`, newReceipt, config);
     return response.data;
 }
 
@@ -34,7 +34,7 @@ const updateReceipt = async (id, newReceipt) => {
     const config = {
         headers: { Authorization: `Bearer ${User.token}` },
     };
-    const response = await axios.put(`${baseUrl}/api/receipts/${id}`, newReceipt, config);
+    const response = await axios.put(`${baseUrl}/api/recipes/${id}`, newReceipt, config);
     return response.data;
 }
 
@@ -42,7 +42,7 @@ const deleteReceipt = async (id, token) => {
     const config = {
         headers: { Authorization: `Bearer ${token}` },
     };
-    const response = await axios.delete(`${baseUrl}/api/receipts/${id}`, config);
+    const response = await axios.delete(`${baseUrl}/api/recipes/${id}`, config);
     return response.data;
 }
 
