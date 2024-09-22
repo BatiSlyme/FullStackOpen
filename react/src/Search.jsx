@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import receipts from './services/receipts';
 
 const onSearch = async (setRecipes, query, setFilteredRecipes) => {
     // setLoading(true);
     try {
-        const titles = await axios.get(`http://localhost:3001/api/recipes`);
+        const titles = await receipts.getReceipts();//await axios.get(`http://localhost:3001/api/recipes`);
         const regex = new RegExp(`\\b${query}\\b`, 'i');
-        const filteredRec = titles.data.map((recipe) => {
+        const filteredRec = titles.map((recipe) => {
             if (regex.test(recipe.title)) {
                 console.log('found query', recipe.title);
                 return {
@@ -25,15 +26,15 @@ const onSearch = async (setRecipes, query, setFilteredRecipes) => {
     }
 };
 
-const Search = ({ setFilteredRecipes }) => {
+const Search = ({ setFilteredRecipes, setSelectedRecipe }) => {
     const [recipes, setRecipes] = useState([]);
     const [query, setQuery] = useState('');
 
     const handleSubmit = (e) => {
         e.preventDefault();
         console.log('query', query);
-
         if (query.trim()) {
+            setSelectedRecipe(undefined);
             onSearch(setRecipes, query, setFilteredRecipes);
         }
     };

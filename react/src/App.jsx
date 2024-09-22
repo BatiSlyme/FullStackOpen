@@ -5,11 +5,15 @@ import RecipeList from './RecipeList';
 import axios from 'axios'
 import RecipeDetails from './RecipeDetails';
 import './App.css';
+import Login from './Login';
+import NavBar from './NavBar';
 
 const App = () => {
-  const [selectedRecipe, setSelectedRecipe] = useState(null);
+  const [selectedRecipe, setSelectedRecipe] = useState();
   const [filteredRecipes, setFilteredRecipes] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [userName, setUsername] = useState();
+  const [showLogin, setShowLogin] = useState(false);
 
   const selectRecipe = async (id) => {
     setLoading(true);
@@ -22,11 +26,16 @@ const App = () => {
     setLoading(false);
   };
 
+
   return (
-    <div style={{ width: '100%' }} >
-      <Header />
-      <div className="container">
-        <Search setFilteredRecipes={setFilteredRecipes} />
+    <div style={{ width: '100%', }} >
+      <div style={{ justifyContent: 'center', flexDirection: 'row' }}>
+        <Header />
+        <NavBar setShowLogin={setShowLogin} userName={userName} setUsername={setUsername} setReceipts={setFilteredRecipes} />
+        <Login setUser={setUsername} showLogin={showLogin} setShowLogin={setShowLogin} />
+      </div>
+      {/* <div className="container"> */}
+        <Search setFilteredRecipes={setFilteredRecipes} setSelectedRecipe={setSelectedRecipe} />
         {loading && <p>Loading...</p>}
         <div className="app-body">
           <div className="recipe-list-container">
@@ -38,7 +47,7 @@ const App = () => {
             </div>
           )}
         </div>
-      </div>
+      {/* </div> */}
     </div>
   );
 };

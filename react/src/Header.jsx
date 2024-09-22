@@ -3,7 +3,7 @@ import React from 'react';
 const Header = () => {
   return (
     <header className="app-header">
-      <h1>Forkify Clone</h1>
+      <h1>Рецептите на Лиля</h1>
     </header>
   );
 };
