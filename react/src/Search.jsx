@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import receipts from './services/receipts';
+import receipts from './services/recipeService';
 
-const onSearch = async (setRecipes, query, setFilteredRecipes) => {
+const onSearch = async (setRecipes, query, setFilteredRecipes, setShowOptions) => {
     // setLoading(true);
     try {
         const titles = await receipts.getReceipts();//await axios.get(`http://localhost:3001/api/recipes`);
@@ -21,12 +21,13 @@ const onSearch = async (setRecipes, query, setFilteredRecipes) => {
         }).filter(Boolean);
         console.log('filteredRec', filteredRec);
         setFilteredRecipes(filteredRec);
+        setShowOptions(false);
     } catch (error) {
         console.error("Error fetching recipes:", error);
     }
 };
 
-const Search = ({ setFilteredRecipes, setSelectedRecipe }) => {
+const Search = ({ setFilteredRecipes, setSelectedRecipe, setShowOptions }) => {
     const [recipes, setRecipes] = useState([]);
     const [query, setQuery] = useState('');
 
@@ -35,7 +36,7 @@ const Search = ({ setFilteredRecipes, setSelectedRecipe }) => {
         console.log('query', query);
         if (query.trim()) {
             setSelectedRecipe(undefined);
-            onSearch(setRecipes, query, setFilteredRecipes);
+            onSearch(setRecipes, query, setFilteredRecipes, setShowOptions);
         }
     };
 

@@ -1,11 +1,11 @@
 import { Button } from "@mui/material";
-import receipts from "./services/receipts";
+import recipeService from "./services/recipeService";
 import { User } from "./global/user";
 
 const Logout = ({ setUsername }) => {
     const logout = async (setUsername) => {
         setUsername(undefined);
-        await receipts.logout();
+        await recipeService.logout();
         User.token = undefined;
     };
 

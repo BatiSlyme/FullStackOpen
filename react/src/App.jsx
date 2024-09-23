@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import Header from './Header';
 import Search from './Search';
 import RecipeList from './RecipeList';
@@ -8,7 +8,7 @@ import './App.css';
 import Login from './Login';
 import NavBar from './NavBar';
 import CreateRecipe from './CreateRecipe';
-import receipts from './services/receipts';
+import recipeService from './services/recipeService';
 
 const App = () => {
   const [selectedRecipe, setSelectedRecipe] = useState();
@@ -17,6 +17,9 @@ const App = () => {
   const [userName, setUsername] = useState();
   const [showLogin, setShowLogin] = useState(false);
   const [showCreateRecipe, setShowCreateRecipe] = useState(false);
+  const [recipe, setRecipe] = useState([]);
+  const [showOptions, setShowOptions] = useState(false);
+  const editRef = useRef();
 
   const selectRecipe = async (id) => {
     setLoading(true);
@@ -41,6 +44,7 @@ const App = () => {
       setSelectedRecipe();
       setFilteredRecipes([]);
       setShowCreateRecipe(false);
+      setShowOptions(false);
     }
   }, [userName]);
 
@@ -53,7 +57,8 @@ const App = () => {
           userName={userName}
           setUsername={setUsername}
           setReceipts={setFilteredRecipes}
-          setShowCreateRecipe={setShowCreateRecipe} />
+          setShowCreateRecipe={setShowCreateRecipe}
+          setShowOptions={setShowOptions} />
         <Login
           setUser={setUsername}
           showLogin={showLogin}
@@ -62,14 +67,19 @@ const App = () => {
       {/* <div className="container"> */}
       <Search
         setFilteredRecipes={setFilteredRecipes}
-        setSelectedRecipe={setSelectedRecipe} />
+        setSelectedRecipe={setSelectedRecipe}
+        setShowOptions={setShowOptions} />
       {loading && <p>Loading...</p>}
       <div className="app-body">
         <div className="recipe-list-container">
           {(!showCreateRecipe && filteredRecipes.length > 0) &&
             <RecipeList
               recipes={filteredRecipes}
-              onSelectRecipe={selectRecipe} />}
+              onSelectRecipe={selectRecipe}
+              setRecipe={setRecipe}
+              setShowCreateRecipe={setShowCreateRecipe}
+              editRef={editRef}
+              showOptions={showOptions} />}
         </div>
         {(!showCreateRecipe && selectedRecipe) && (
           <div style={{ width: '100%' }}>
@@ -82,6 +92,8 @@ const App = () => {
       </div>
       {showCreateRecipe &&
         <CreateRecipe
+          edit={editRef.current}
+          recipe={recipe}
           userName={userName}
           setShowCreateRecipe={setShowCreateRecipe}
         />}

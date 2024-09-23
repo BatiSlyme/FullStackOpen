@@ -41,7 +41,19 @@ recipesRouter.get('/:id', async (request, response) => {
     }
 });
 
-recipesRouter.delete('/:id', async (req, res, next) => {
+recipesRouter.post('/getAllRecipesByUser', middleware.userExtractor, async (request, response) => {
+    const user = request.user;
+    console.log('user.id', user.id);
+    const recipes = await Recipe.find({ user: user.id.toString() }).populate('user', { username: 1, name: 1, id: 1 });
+    console.log('recipes', recipes);
+    if (recipes) {
+        response.json(recipes);
+    } else {
+        response.status(404).end();
+    }
+});
+
+recipesRouter.delete('/:id', middleware.userExtractor, async (req, res, next) => {
     const user = req.user;
     const recipe = await Recipe.findById(req.params.id);
 
@@ -56,19 +68,25 @@ recipesRouter.delete('/:id', async (req, res, next) => {
 
 });
 
-recipesRouter.put('/:id', async (req, res, next) => {
+recipesRouter.put('/:id', middleware.userExtractor, async (req, res, next) => {
+    const user = req.user;
     const body = req.body
-    console.log(`updateBody is`, body);
-    const recipe = {
-        body
-    }
+    const recipe = body;
 
-    const update = await Recipe.findByIdAndUpdate(req.params.id, recipe, { new: true, runValidators: true, context: 'query' });
-    if (update) {
-        res.json(update);
+    const recipeToCheck = await Recipe.findById(req.params.id);
+
+    if (user.id === recipeToCheck.user.toString()) {
+        const update = await Recipe.findByIdAndUpdate(req.params.id, recipe, { new: true, runValidators: true, context: 'query' })
+            .populate('user', { username: 1, name: 1, id: 1 });
+        if (update) {
+            console.log('update', update);
+            res.json(update);
+        } else {
+            res.status(404).end();
+        }
     } else {
-        res.status(404).end();
+        res.status(401).json({ error: 'Unauthorized' })
     }
-})
+});
 
 module.exports = recipesRouter;

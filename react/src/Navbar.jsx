@@ -7,18 +7,23 @@ import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
 import MenuIcon from '@mui/icons-material/Menu';
 import Logout from './Logout';
-import receipts from './services/receipts';
+import recipeService from './services/recipeService';
 
-const getAllRecipes = async (setReceipts, setShowCreateRecipe) => {
-    console.log(setReceipts);
+const getAllRecipes = async (setReceipts, setShowCreateRecipe, setShowOptions) => {
     setShowCreateRecipe(false);
-    const recipes = await receipts.getReceipts()
+    const recipes = await recipeService.getReceipts()
     setReceipts(recipes);
+    setShowOptions(false);
 }
 
-export default function NavBar({ setShowLogin, userName, setUsername, setReceipts, setShowCreateRecipe }) {
-    console.log('setReceipts', setReceipts);
-    console.log('setUsername', setUsername);
+const getMyRecipes = async (setReceipts, setShowCreateRecipe, setShowOptions) => {
+    setShowCreateRecipe(false);
+    const recipes = await recipeService.getAllReceiptsByUser()
+    setReceipts(recipes);
+    setShowOptions(true);
+}
+
+export default function NavBar({ setShowLogin, userName, setUsername, setReceipts, setShowCreateRecipe, setShowOptions }) {
     return (
         <Box sx={{ flexGrow: 1 }}>
             <AppBar position="static">
@@ -32,12 +37,15 @@ export default function NavBar({ setShowLogin, userName, setUsername, setReceipt
                     >
                         <MenuIcon />
                     </IconButton>
-                    <Button style={{ color: 'white', fontWeight: 'bold' }} onClick={() => { getAllRecipes(setReceipts, setShowCreateRecipe) }}>Recipes</Button>
+                    <Button style={{ color: 'white', fontWeight: 'bold' }} onClick={() => { getAllRecipes(setReceipts, setShowCreateRecipe, setShowOptions) }}>Recipes</Button>
                     {userName && <Button style={{ color: 'white', fontWeight: 'bold' }} onClick={() => { setShowCreateRecipe(true) }}>Create Recipe</Button>}
-                    <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
 
-                    </Typography>
-                    {userName ? <div className='welcome'> Welcome {userName}! <Logout setUsername={setUsername} /> </div> : <Button color="inherit" onClick={() => { setShowLogin(true) }}>Login</Button>}
+                    {userName && <Typography onClick={() => { getMyRecipes(setReceipts, setShowCreateRecipe, setShowOptions) }} variant="h6" component="div" sx={{ flexGrow: 1 }}>
+                        My Recipes
+                    </Typography>}
+                    <div>
+                        {userName ? <div className='welcome'> Welcome {userName}! <Logout setUsername={setUsername} /> </div> : <Button color="inherit" onClick={() => { setShowLogin(true) }}>Login</Button>}
+                    </div>
                 </Toolbar>
             </AppBar>
         </Box>

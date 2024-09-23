@@ -1,18 +1,7 @@
 const config = require('../utils/config');
 const mongoose = require('mongoose');
-const url = config.MONGODB_URL;
-console.log('recipe -> connecting to', url);
-
 
 mongoose.set('strictQuery', false);
-
-mongoose.connect(url)
-    .then(() => {
-        console.log('recipes connected to MongoDB')
-    })
-    .catch(error => {
-        console.log('recipes-->error connecting to MongoDB:', error.message)
-    });
 
 const recipeSchema = new mongoose.Schema({
     title: {

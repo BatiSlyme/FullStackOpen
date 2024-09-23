@@ -16,7 +16,7 @@ const mongoose = require('mongoose')
 
 mongoose.set('strictQuery', false)
 
-logger.info('app.js -> connecting to', config.MONGODB_URI, process.env.MONGODB_URL);
+// logger.info('app.js -> connecting to', config.MONGODB_URI, process.env.MONGODB_URL);
 
 mongoose.connect(config.MONGODB_URI)
     .then(() => {

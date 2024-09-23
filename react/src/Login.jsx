@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import receipts from './services/receipts';
+import recipeService from './services/recipeService';
 import Modal from '@mui/material/Modal';
 import Box from '@mui/material/Box';
 import CancelIcon from '@mui/icons-material/Cancel';
@@ -22,7 +22,7 @@ const Login = ({ setUser, showLogin, setShowLogin }) => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const login = await receipts.login(username, password);
+            const login = await recipeService.login(username, password);
             setError('');
             setUser(login.name);
             User.token = login.token;

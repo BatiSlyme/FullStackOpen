@@ -1,7 +1,7 @@
-import { useState } from "react";
-import receipts from "./services/receipts";
+import { useEffect, useState } from "react";
+import recipeService from "./services/recipeService";
 
-const CreateRecipe = ({ userName, setShowCreateRecipe }) => {
+const CreateRecipe = ({ userName, setShowCreateRecipe, edit, recipe }) => {
     const [title, setTitle] = useState('');
     const [content, setContent] = useState('');
     const [error, setError] = useState('');
@@ -14,19 +14,41 @@ const CreateRecipe = ({ userName, setShowCreateRecipe }) => {
         setContent(e.target.value);
     }
 
+    useEffect(() => {
+        if (edit) {
+            setTitle(recipe.title);
+            setContent(recipe.content);
+        }
+    }, [])
+
     const handleSubmit = async (e) => {
         e.preventDefault();
-        try {
-            const recipe = await receipts.createReceipt({ title: title, content: content, userName: userName });
-            setTitle('');
-            setContent('');
-            setError('');
-            setShowCreateRecipe(false);
-            alert('Recipe created successfully!');
+        if (edit) {
+            try {
+                await recipeService.updateReceipt(recipe.id, { title: title, content: content, likes: recipe.likes, userName: userName });
+                setTitle('');
+                setContent('');
+                setError('');
+                setShowCreateRecipe(false);
+                alert('Recipe edited successfully!');
 
-        } catch (error) {
-            console.error("Error creating recipe:", error);
-            setError('Failed to create recipe');
+            } catch (error) {
+                console.error("Error creating recipe:", error);
+                setError('Failed to create recipe');
+            }
+        } else {
+            try {
+                await recipeService.createReceipt({ title: title, content: content, userName: userName });
+                setTitle('');
+                setContent('');
+                setError('');
+                setShowCreateRecipe(false);
+                alert('Recipe created successfully!');
+
+            } catch (error) {
+                console.error("Error creating recipe:", error);
+                setError('Failed to create recipe');
+            }
         }
     }
 
