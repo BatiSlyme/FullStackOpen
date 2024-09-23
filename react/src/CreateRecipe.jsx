@@ -18,8 +18,11 @@ const CreateRecipe = ({ userName, setShowCreateRecipe, edit, recipe }) => {
         if (edit) {
             setTitle(recipe.title);
             setContent(recipe.content);
+        } else {
+            setTitle();
+            setContent();
         }
-    }, [])
+    }, [edit])
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -53,31 +56,34 @@ const CreateRecipe = ({ userName, setShowCreateRecipe, edit, recipe }) => {
     }
 
     return (
-        <form onSubmit={handleSubmit}>
-            <div className="form-group">
-                <label htmlFor="title">Title:</label>
-                <input
-                    required
-                    type="text"
-                    id="title"
-                    value={title}
-                    onChange={handleTitleChange}
-                />
-            </div>
-            <div className="form-group">
-                <label htmlFor="content">Content:</label>
-                <textarea
-                    rows="4" cols="50"
-                    required
-                    type="text"
-                    id="content"
-                    value={content}
-                    onChange={handleContentChange}
-                />
-            </div>
-            <button type="submit">Submit</button>
-            {error && <div className='error'>{error}</div>}
-        </form>
+        <div>
+            {edit ? <h5>Edit {recipe.title}</h5> : <h5>Create a new recipe</h5>}
+            <form onSubmit={handleSubmit}>
+                <div className="form-group">
+                    <label htmlFor="title">Title:</label>
+                    <input
+                        required
+                        type="text"
+                        id="title"
+                        value={title}
+                        onChange={handleTitleChange}
+                    />
+                </div>
+                <div className="form-group">
+                    <label htmlFor="content">Content:</label>
+                    <textarea
+                        rows="4" cols="50"
+                        required
+                        type="text"
+                        id="content"
+                        value={content}
+                        onChange={handleContentChange}
+                    />
+                </div>
+                <button type="submit">Submit</button>
+                {error && <div className='error'>{error}</div>}
+            </form>
+        </div>
     );
 }
 

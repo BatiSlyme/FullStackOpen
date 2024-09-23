@@ -58,7 +58,8 @@ const App = () => {
           setUsername={setUsername}
           setReceipts={setFilteredRecipes}
           setShowCreateRecipe={setShowCreateRecipe}
-          setShowOptions={setShowOptions} />
+          setShowOptions={setShowOptions}
+          editRef={editRef} />
         <Login
           setUser={setUsername}
           showLogin={showLogin}
@@ -79,7 +80,8 @@ const App = () => {
               setRecipe={setRecipe}
               setShowCreateRecipe={setShowCreateRecipe}
               editRef={editRef}
-              showOptions={showOptions} />}
+              showOptions={showOptions}
+              setFilteredRecipes={setFilteredRecipes} />}
         </div>
         {(!showCreateRecipe && selectedRecipe) && (
           <div style={{ width: '100%' }}>

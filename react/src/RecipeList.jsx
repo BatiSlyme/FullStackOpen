@@ -1,11 +1,22 @@
 import React from 'react';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
-const RecipeList = ({ recipes, onSelectRecipe, setRecipe, setShowCreateRecipe, editRef, showOptions }) => {
+import recipeService from './services/recipeService';
+
+const RecipeList = ({ recipes, onSelectRecipe, setRecipe, setShowCreateRecipe, editRef, showOptions, setFilteredRecipes }) => {
   const selectRecipe = (setRecipe, recipe, setShowCreateRecipe, editRef) => {
     setRecipe(recipe);
     setShowCreateRecipe(true);
     editRef.current = true;
+  }
+  const deleteRecipe = (recipe, recipes, setFilteredRecipes) => {
+    try {
+      recipeService.deleteReceipt(recipe.id);
+      setFilteredRecipes(recipes.filter((r) => r.id !== recipe.id));
+      alert('Recipe deleted successfully!');
+    } catch (error) {
+      alert('Failed to delete recipe');
+    }
   }
   return (
     <>
@@ -20,7 +31,7 @@ const RecipeList = ({ recipes, onSelectRecipe, setRecipe, setShowCreateRecipe, e
           </div>
           {showOptions && <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'end' }}>
             <EditIcon onClick={() => { selectRecipe(setRecipe, recipe, setShowCreateRecipe, editRef) }} style={{ fontSize: 40 }} />
-            <DeleteForeverIcon style={{ fontSize: 40 }} />
+            <DeleteForeverIcon onClick={() => { deleteRecipe(recipe, recipes, setFilteredRecipes) }} style={{ fontSize: 40 }} />
           </div>
           }
         </div>

@@ -23,7 +23,7 @@ const getMyRecipes = async (setReceipts, setShowCreateRecipe, setShowOptions) =>
     setShowOptions(true);
 }
 
-export default function NavBar({ setShowLogin, userName, setUsername, setReceipts, setShowCreateRecipe, setShowOptions }) {
+export default function NavBar({ setShowLogin, userName, setUsername, setReceipts, setShowCreateRecipe, setShowOptions, editRef }) {
     return (
         <Box sx={{ flexGrow: 1 }}>
             <AppBar position="static">
@@ -38,7 +38,7 @@ export default function NavBar({ setShowLogin, userName, setUsername, setReceipt
                         <MenuIcon />
                     </IconButton>
                     <Button style={{ color: 'white', fontWeight: 'bold' }} onClick={() => { getAllRecipes(setReceipts, setShowCreateRecipe, setShowOptions) }}>Recipes</Button>
-                    {userName && <Button style={{ color: 'white', fontWeight: 'bold' }} onClick={() => { setShowCreateRecipe(true) }}>Create Recipe</Button>}
+                    {userName && <Button style={{ color: 'white', fontWeight: 'bold' }} onClick={() => { setShowCreateRecipe(true); editRef.current = false; }}>Create Recipe</Button>}
 
                     {userName && <Typography onClick={() => { getMyRecipes(setReceipts, setShowCreateRecipe, setShowOptions) }} variant="h6" component="div" sx={{ flexGrow: 1 }}>
                         My Recipes

@@ -46,9 +46,9 @@ const updateReceipt = async (id, newReceipt) => {
     return response.data;
 }
 
-const deleteReceipt = async (id, token) => {
+const deleteReceipt = async (id) => {
     const config = {
-        headers: { Authorization: `Bearer ${token}` },
+        headers: { Authorization: `Bearer ${User.token}` },
     };
     const response = await axios.delete(`${baseUrl}/api/recipes/${id}`, config);
     return response.data;
