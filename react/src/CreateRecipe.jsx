@@ -15,6 +15,7 @@ const CreateRecipe = ({ userName, setShowCreateRecipe, edit, recipe }) => {
     }
 
     useEffect(() => {
+        console.log('edit', edit);
         if (edit) {
             setTitle(recipe.title);
             setContent(recipe.content);
@@ -56,9 +57,9 @@ const CreateRecipe = ({ userName, setShowCreateRecipe, edit, recipe }) => {
     }
 
     return (
-        <div>
-            {edit ? <h5>Edit {recipe.title}</h5> : <h5>Create a new recipe</h5>}
-            <form onSubmit={handleSubmit}>
+        <div style={{ display: "flex", justifyContent: "center", flexDirection: "column", alignItems: "center" }}>
+            {edit ? <h2>Edit {recipe.title}</h2> : <h2>Create a new recipe</h2>}
+            <form  onSubmit={handleSubmit}>
                 <div className="form-group">
                     <label htmlFor="title">Title:</label>
                     <input

@@ -33,7 +33,7 @@ const App = () => {
   };
 
   useEffect(() => {
-    setShowCreateRecipe(filteredRecipes.length > 0 ? false : true);
+    // setShowCreateRecipe(filteredRecipes.length > 0);
     setSelectedRecipe(filteredRecipes.length === 1);
   }, [filteredRecipes]);
 
@@ -43,6 +43,8 @@ const App = () => {
       setFilteredRecipes([]);
       setShowCreateRecipe(false);
       setShowOptions(false);
+      editRef.current = false;
+      setShowCreateRecipe(false);
     }
   }, [userName]);
 
