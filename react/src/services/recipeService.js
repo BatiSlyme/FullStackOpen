@@ -22,6 +22,11 @@ const getReceipts = async () => {
     return response.data;
 }
 
+const getReceiptById = async (id) => {
+    const response = await axios.get(`${baseUrl}/api/recipes/${id}`);
+    return response.data;
+}
+
 const getAllReceiptsByUser = async () => {
     const config = {
         headers: { Authorization: `Bearer ${User.token}` },
@@ -54,4 +59,4 @@ const deleteReceipt = async (id) => {
     return response.data;
 }
 
-export default { login, getReceipts, createReceipt, updateReceipt, deleteReceipt, logout, getAllReceiptsByUser };
+export default { login, getReceipts, createReceipt, updateReceipt, deleteReceipt, logout, getAllReceiptsByUser, getReceiptById };

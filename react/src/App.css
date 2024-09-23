@@ -82,6 +82,19 @@ body {
   transition: transform 0.2s;
 }
 
+.recipe-item-options {
+  background-color: rgb(18, 6, 6);
+  color: white;
+  border-radius: 8px;
+  margin-inline: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  transition: transform 0.2s;
+  :hover {
+    transform: scale(1.05);
+  }
+}
+
 .recipe-item:hover {
   transform: scale(1.05);
 }

@@ -24,8 +24,8 @@ const App = () => {
   const selectRecipe = async (id) => {
     setLoading(true);
     try {
-      const content = await axios.get(`http://localhost:3001/api/recipes/${id}`);
-      setSelectedRecipe(content.data.content);
+      const content = await recipeService.getReceiptById(id);
+      setSelectedRecipe(content.content);
     } catch (error) {
       console.error("Error fetching recipe details:", error);
     }
@@ -33,10 +33,8 @@ const App = () => {
   };
 
   useEffect(() => {
-    if (filteredRecipes.length > 0) {
-      setShowCreateRecipe(false);
-      setSelectedRecipe();
-    }
+    setShowCreateRecipe(filteredRecipes.length > 0 ? false : true);
+    setSelectedRecipe(filteredRecipes.length === 1);
   }, [filteredRecipes]);
 
   useEffect(() => {
@@ -76,7 +74,8 @@ const App = () => {
           {(!showCreateRecipe && filteredRecipes.length > 0) &&
             <RecipeList
               recipes={filteredRecipes}
-              onSelectRecipe={selectRecipe}
+              setSelectedRecipe={setSelectedRecipe}
+              // onSelectRecipe={selectRecipe}
               setRecipe={setRecipe}
               setShowCreateRecipe={setShowCreateRecipe}
               editRef={editRef}
