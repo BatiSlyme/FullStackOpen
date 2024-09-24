@@ -5,6 +5,7 @@ import Box from '@mui/material/Box';
 import CancelIcon from '@mui/icons-material/Cancel';
 import IconButton from '@mui/material/IconButton';
 import { User } from './global/user';
+import { LoaderUtil } from './global/loaderUtil';
 
 const SignUp = ({ showSingUp, setShowSingUp }) => {
     const [username, setUsername] = useState('');
@@ -38,9 +39,9 @@ const SignUp = ({ showSingUp, setShowSingUp }) => {
         }
 
         try {
-            const res = await recipeService.createUser(name, username, password);
+            LoaderUtil.show();
+            await recipeService.createUser(name, username, password);
             setError('');
-            User.token = login.token;
             setShowSingUp(false)
             setUsername('');
             setPassword('');
@@ -53,6 +54,8 @@ const SignUp = ({ showSingUp, setShowSingUp }) => {
             } else {
                 setError(error.request.response);
             }
+        } finally {
+            LoaderUtil.hide();
         }
     };
 

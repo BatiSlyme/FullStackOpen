@@ -46,7 +46,7 @@ export default function NavBar({
         <Box sx={{ flexGrow: 1 }}>
             <AppBar position="sticky">
                 <Toolbar sx={{ display: 'flex', justifyContent: 'space-between' }} >
-                    <Box>
+                    <Box sx={{ display: 'flex', alignContent: 'center', alignItems: 'center' }}>
                         <IconButton
                             size="large"
                             edge="start"
@@ -56,9 +56,18 @@ export default function NavBar({
                         >
                             <MenuIcon />
                         </IconButton>
-                        <Button style={{ color: 'white', fontWeight: 'bold' }} onClick={() => { getAllRecipes(setReceipts, setShowCreateRecipe, setShowOptions) }}>Recipes</Button>
-                        {userName && <Button style={{ color: 'white', fontWeight: 'bold' }} onClick={() => { setShowCreateRecipe(true); editRef.current = false; }}>Create Recipe</Button>}
-                        {userName && <Typography onClick={() => { getMyRecipes(setReceipts, setShowCreateRecipe, setShowOptions) }} variant="h6" component="div" sx={{ flexGrow: 1 }}>
+                        <Typography
+                            variant="h6" component="div" sx={{ flexGrow: 1, cursor: 'pointer' }}
+                            onClick={() => { getAllRecipes(setReceipts, setShowCreateRecipe, setShowOptions) }}>
+                            Recipes
+                        </Typography>
+                        {userName &&
+                            <Typography
+                                variant="h6" component="div" sx={{ flexGrow: 1, cursor: 'pointer', marginInline: 2 }}
+                                onClick={() => { setShowCreateRecipe(true); editRef.current = false; }} >
+                                Create Recipe
+                            </Typography>}
+                        {userName && <Typography onClick={() => { getMyRecipes(setReceipts, setShowCreateRecipe, setShowOptions) }} variant="h6" component="div" sx={{ flexGrow: 1, cursor: 'pointer' }}>
                             My Recipes
                         </Typography>}
                     </Box>
