@@ -9,6 +9,9 @@ import Login from './Login';
 import NavBar from './NavBar';
 import CreateRecipe from './CreateRecipe';
 import recipeService from './services/recipeService';
+import CircularProgress from '@mui/material/CircularProgress';
+import Loader from './Loader';
+import SignUp from './SignUp';
 
 const App = () => {
   const [selectedRecipe, setSelectedRecipe] = useState();
@@ -19,6 +22,7 @@ const App = () => {
   const [showCreateRecipe, setShowCreateRecipe] = useState(false);
   const [recipe, setRecipe] = useState([]);
   const [showOptions, setShowOptions] = useState(false);
+  const [showSingUp, setShowSingUp] = useState(false);
   const editRef = useRef();
 
   const selectRecipe = async (id) => {
@@ -45,11 +49,13 @@ const App = () => {
       setShowOptions(false);
       editRef.current = false;
       setShowCreateRecipe(false);
+      setShowSingUp(false);
     }
   }, [userName]);
 
   return (
     <div style={{ width: '100%', }} >
+      <Loader />
       <div style={{ justifyContent: 'center', flexDirection: 'row' }}>
         <Header />
         <NavBar
@@ -59,11 +65,17 @@ const App = () => {
           setReceipts={setFilteredRecipes}
           setShowCreateRecipe={setShowCreateRecipe}
           setShowOptions={setShowOptions}
-          editRef={editRef} />
+          editRef={editRef}
+          setShowSingUp={setShowSingUp} />
+
         <Login
           setUser={setUsername}
           showLogin={showLogin}
           setShowLogin={setShowLogin} />
+        <SignUp
+          setShowSingUp={setShowSingUp}
+          showSingUp={showSingUp}
+        />
       </div>
       {/* <div className="container"> */}
       <Search

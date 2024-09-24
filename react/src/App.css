@@ -160,10 +160,10 @@ body {
   }
 
   .button {
-    background-color: #ff5e57;
+    background-color: red;
     color: white;
     padding: 10px 20px;
-    border: none;
+    border: 1px solid red;
     border-radius: 5px;
     cursor: pointer;
     margin: 10px;
@@ -176,7 +176,7 @@ body {
   }
 
   form label {
-    width: 100px; /* Adjust based on your design */
+    width: 40%; /* Adjust based on your design */
 }
 
 form input, form textarea {

@@ -8,6 +8,11 @@ const login = async (username, password) => {
     return response.data;
 }
 
+const createUser = async (name, username, password) => {
+    const response = await axios.post(`${baseUrl}/api/users`, { name, username, password });
+    return response.data;
+}
+
 const logout = async () => {
     const config = {
         headers: { Authorization: `Bearer ${User.token}` },
@@ -59,4 +64,14 @@ const deleteReceipt = async (id) => {
     return response.data;
 }
 
-export default { login, getReceipts, createReceipt, updateReceipt, deleteReceipt, logout, getAllReceiptsByUser, getReceiptById };
+export default {
+    login,
+    getReceipts,
+    createReceipt,
+    updateReceipt,
+    deleteReceipt,
+    logout,
+    getAllReceiptsByUser,
+    getReceiptById,
+    createUser
+};
