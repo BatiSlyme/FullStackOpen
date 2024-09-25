@@ -24,6 +24,18 @@ const recipeSchema = new mongoose.Schema({
             message: props => `${props.value} no offensive words or poisonous substances allowed!`
         }
     },
+    ingredients: {
+        type: [String],
+        required: [true, 'Ingredients required'],
+    },
+    cookingTime: {
+        type: Number,
+        required: [true, 'Cooking time required'],
+    },
+    servings: {
+        type: Number,
+        required: [true, 'Servings required'],
+    },
     likes: Number,
     user: {
         type: mongoose.Schema.Types.ObjectId,

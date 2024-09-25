@@ -13,10 +13,19 @@ recipesRouter.get('/', async (request, response) => {
     }
 })
 
+recipesRouter.post('/getBySearch', async (request, response) => {
+    const query = request.body.query.trim();
+    const recipes = await Recipe.find({ title: { $regex: query, $options: 'i' } }).populate('user', { username: 1, name: 1, id: 1 });
+    if (recipes) {
+        response.json(recipes);
+    } else {
+        response.status(404).end();
+    }
+})
+
 recipesRouter.post('/', middleware.userExtractor, async (request, response, next) => {
     const req = request.body;
     const user = request.user;
-    console.log('user', user);
 
     if (!req.likes) {
         req.likes = 0;

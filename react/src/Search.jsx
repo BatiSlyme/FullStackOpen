@@ -2,25 +2,12 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import receipts from './services/recipeService';
 
-const onSearch = async (setRecipes, query, setFilteredRecipes, setShowOptions) => {
+const onSearch = async (query, setFilteredRecipes, setSelectedRecipe, setShowOptions) => {
     // setLoading(true);
     try {
-        const titles = await receipts.getReceipts();//await axios.get(`http://localhost:3001/api/recipes`);
-        const regex = new RegExp(`\\b${query}\\b`, 'i');
-        const filteredRec = titles.map((recipe) => {
-            if (regex.test(recipe.title)) {
-                console.log('found query', recipe.title);
-                return {
-                    id: recipe.id,
-                    title: recipe.title,
-                    content: recipe.content,
-                    likes: recipe.likes,
-                    user: recipe.user
-                };
-            }
-        }).filter(Boolean);
-        console.log('filteredRec', filteredRec);
-        setFilteredRecipes(filteredRec);
+        const recipes = await receipts.getRecipeBySearch(query);//await axios.get(`http://localhost:3001/api/recipes`);
+        setFilteredRecipes(recipes);
+        setSelectedRecipe(recipes.length === 1 ? recipes[0] : undefined);
         setShowOptions(false);
     } catch (error) {
         console.error("Error fetching recipes:", error);
@@ -28,7 +15,6 @@ const onSearch = async (setRecipes, query, setFilteredRecipes, setShowOptions) =
 };
 
 const Search = ({ setFilteredRecipes, setSelectedRecipe, setShowOptions }) => {
-    const [recipes, setRecipes] = useState([]);
     const [query, setQuery] = useState('');
 
     const handleSubmit = (e) => {
@@ -36,7 +22,7 @@ const Search = ({ setFilteredRecipes, setSelectedRecipe, setShowOptions }) => {
         console.log('query', query);
         if (query.trim()) {
             setSelectedRecipe(undefined);
-            onSearch(setRecipes, query, setFilteredRecipes, setShowOptions);
+            onSearch(query, setFilteredRecipes, setSelectedRecipe, setShowOptions);
         }
     };
 

@@ -27,6 +27,11 @@ const getReceipts = async () => {
     return response.data;
 }
 
+const getRecipeBySearch = async (query) => {
+    const response = await axios.post(`${baseUrl}/api/recipes/getBySearch`, { query });
+    return response.data;
+}
+
 const getReceiptById = async (id) => {
     const response = await axios.get(`${baseUrl}/api/recipes/${id}`);
     return response.data;
@@ -73,5 +78,6 @@ export default {
     logout,
     getAllReceiptsByUser,
     getReceiptById,
-    createUser
+    createUser,
+    getRecipeBySearch
 };

@@ -63,11 +63,22 @@ body {
 
 /* Recipe List Layout - Responsive Grid */
 .recipe-list-container {
-  display: grid;
-  gap: 20px;
-  width: 100%;
-  max-width: 1200px;
-  margin: 20px auto;
+  display: flex;
+  flex-wrap: wrap;
+  /* width: 100%; */
+  /* max-width: 1200px; */
+  /* margin: 20px auto; */
+}
+
+.recipe-list-container > div {
+  flex: 1 0 33%;
+  max-width: 33%;
+
+}
+
+.recipe-list-container > div:only-child {
+  flex: 1 0 100%;
+  max-width: 100%;
 }
 
 .recipe-item {
@@ -102,7 +113,6 @@ body {
 
 .recipe-item img {
   width: 100%;
-  height: auto;
   border-radius: 8px;
 }
 
@@ -111,8 +121,9 @@ body {
   background-color: brown;
   color: white;
   padding: 20px;
-  margin: 10px;
+  margin: 10px; 
   text-align: center;
+  justify-content: center;
   border-radius: 8px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
   cursor: text;
@@ -125,7 +136,29 @@ body {
 }
 
 .recipe-details ul {
-  list-style-type: none;
+  display: flex;
+  list-style-type: disc;
+  justify-content: space-evenly;
+  font-weight: bold;
+  /* width: 20%; */
+  padding: 0;
+}
+
+.recipe-details z {
+  font-weight: bold;
+}
+
+/* .recipe-details li {
+  list-style-type: circle;
+  justify-content: center;
+
+  text-align: center;
+  padding: 0;
+}  */
+
+.recipe-details h2 {
+  text-align: center;
+  color: black;
   padding: 0;
 }
 
@@ -143,9 +176,6 @@ body {
     flex-direction: row;
   }
 
-  .recipe-details {
-    width: 40%;
-  }
 
   .error {
     color: red;
@@ -172,20 +202,24 @@ body {
   .form-group {
     display: flex;
     align-items: center;
-    margin-bottom: 10px; /* Adds some space between fields */
+    margin-bottom: 10px;
+    /* Adds some space between fields */
   }
 
   form label {
-    width: 40%; /* Adjust based on your design */
-}
+    width: 40%;
+    /* Adjust based on your design */
+  }
 
-form input, form textarea {
+  form input,
+  form textarea {
     flex: 1;
     margin-left: 10px;
-}
+  }
 
-textarea {
-    height: 100%; /* Adjust the height of the textarea as needed */
-}
+  textarea {
+    height: 100%;
+    /* Adjust the height of the textarea as needed */
+  }
 
 }

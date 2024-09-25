@@ -1,20 +1,34 @@
-import React from 'react';
+import axios from 'axios';
+import { useEffect, useState } from 'react';
 
 const RecipeDetails = ({ recipe }) => {
+    const [img, setImg] = useState(null);
+    
+
+    console.log('recipe', recipe);
+
+    // useEffect(() => {
+    //     if (recipe) {
+    //         getImg(recipe.title)
+    //     }
+    // }, [recipe]);
+
     return (
         <div className="recipe-details">
-            <img src={recipe.image_url} alt={recipe.title} />
+            {/* <button onClick={() => getImg(recipe.title)}>Generate Image</button> */}
+            {/* <img src={img} alt={recipe.title} /> */}
             <h2>{recipe.title}</h2>
-            <p>Cooking Time: 123 minutes</p>
-            <p>Servings: 2</p>
+            <p>Cooking Time: <z>{recipe.cookingTime}mins</z></p>
+            <p>Servings: <z>{recipe.servings}</z> </p>
 
-            <h3>Ingredients:</h3>
+            <h2>Ingredients:</h2>
             <ul>
-                {recipe}
-                {/* {recipe.ingredients.map((ing, index) => (
-                    <li key={index}>{ing.quantity} {ing.unit} {ing.description}</li>
-                ))} */}
+                {(recipe.ingredients || []).map((ing, index) => (
+                    <li key={index}>{ing}</li>
+                ))}
             </ul>
+            <h2>Instructions:</h2>
+            {recipe.content}
         </div>
     );
 };

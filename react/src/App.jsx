@@ -38,7 +38,8 @@ const App = () => {
 
   useEffect(() => {
     // setShowCreateRecipe(filteredRecipes.length > 0);
-    setSelectedRecipe(filteredRecipes.length === 1);
+    setSelectedRecipe(filteredRecipes.length === 1 ? filteredRecipes[0] : undefined);
+    console.log('filteredRecipes', filteredRecipes);
   }, [filteredRecipes]);
 
   useEffect(() => {
@@ -107,9 +108,10 @@ const App = () => {
       </div>
       {showCreateRecipe &&
         <CreateRecipe
+          recipes={filteredRecipes}
+          setFilteredRecipes={setFilteredRecipes}
           edit={editRef.current}
           recipe={recipe}
-          userName={userName}
           setShowCreateRecipe={setShowCreateRecipe}
         />}
       {/* </div> */}
