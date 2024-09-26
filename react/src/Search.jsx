@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
-import axios from 'axios';
 import receipts from './services/recipeService';
+import { Box, Checkbox, FormControlLabel, FormGroup } from '@mui/material';
 
-const onSearch = async (query, setFilteredRecipes, setSelectedRecipe, setShowOptions) => {
+const onSearch = async (query, ingredients, cookingTime, setFilteredRecipes, setSelectedRecipe, setShowOptions) => {
     // setLoading(true);
     try {
-        const recipes = await receipts.getRecipeBySearch(query);//await axios.get(`http://localhost:3001/api/recipes`);
+        const recipes = await receipts.getRecipeBySearch({ query: query, ingredients: ingredients, cookingTime: cookingTime });//await axios.get(`http://localhost:3001/api/recipes`);
         setFilteredRecipes(recipes);
         setSelectedRecipe(recipes.length === 1 ? recipes[0] : undefined);
         setShowOptions(false);
@@ -16,26 +16,93 @@ const onSearch = async (query, setFilteredRecipes, setSelectedRecipe, setShowOpt
 
 const Search = ({ setFilteredRecipes, setSelectedRecipe, setShowOptions }) => {
     const [query, setQuery] = useState('');
+    const [ingredients, setIngredients] = useState('');
+    const [cookingTime, setCookingTime] = useState('');
+    const [showCookingTime, setShowCookingTime] = useState(false);
+    const [showIngredients, setShowIngredients] = useState(false);
 
     const handleSubmit = (e) => {
         e.preventDefault();
         console.log('query', query);
         if (query.trim()) {
             setSelectedRecipe(undefined);
-            onSearch(query, setFilteredRecipes, setSelectedRecipe, setShowOptions);
+            onSearch(query, ingredients, cookingTime, setFilteredRecipes, setSelectedRecipe, setShowOptions);
         }
     };
 
+    const handleIngredientsChange = (e) => {
+        setIngredients(e.target.value.trim());
+    }
+
+    const handleCookingTimeChange = (e) => {
+        setCookingTime(e.target.value.trim());
+    }
+
     return (
-        <form onSubmit={handleSubmit} className="search-form">
-            <input
-                type="text"
-                value={query}
-                onChange={(e) => setQuery(e.target.value)}
-                placeholder="Search for a recipe..."
-            />
-            <button type="submit">Search</button>
-        </form>
+        <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+            <form onSubmit={handleSubmit} className="search-form" style={{ minWidth: '40%' }}>
+                <input
+                    type="text"
+                    value={query}
+                    onChange={(e) => setQuery(e.target.value)}
+                    placeholder="Search for a recipe..."
+                />
+                {showIngredients &&
+                    <input
+                        type="text"
+                        value={ingredients}
+                        id='ingredients'
+                        onChange={handleIngredientsChange}
+                        placeholder="ingredients"
+                    />
+                }
+                {showCookingTime &&
+                    <input
+                        type="text"
+                        value={cookingTime}
+                        id='cookingTime'
+                        onChange={handleCookingTimeChange}
+                        placeholder="cooking time"
+                    />
+                }
+                <button type="submit">Search</button>
+            </form>
+            <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                <label style={{ marginRight: 20 }}><h3>Filter By:  </h3></label>
+                <FormGroup row style={{ minWidth: '40%', backgroundColor: 'rgb(0, 146, 255)' }}>
+                    <FormControlLabel
+                        style={{ color: 'white' }}
+                        control={<Checkbox
+                            style={{ color: 'white' }}
+                            defaultChecked onClick={(e) => {
+                                if (e.target.checked) {
+                                    setShowIngredients(true);
+                                } else {
+                                    setIngredients('');
+                                    setShowIngredients(false);
+                                }
+                            }}
+                        />}
+                        label="Ingredients"
+                    />
+                    <FormControlLabel
+                        style={{ color: 'white' }}
+                        control={<Checkbox
+                            style={{ color: 'white' }}
+                            defaultChecked onClick={(e) => {
+                                if (e.target.checked) {
+                                    setShowCookingTime(true);
+                                } else {
+                                    setCookingTime('');
+                                    setShowCookingTime(false);
+                                }
+                            }}
+                        />}
+                        label="Cooking time" />
+                </FormGroup>
+            </Box>
+        </div >
+
     );
 };
 

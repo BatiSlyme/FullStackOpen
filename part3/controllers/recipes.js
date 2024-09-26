@@ -15,7 +15,24 @@ recipesRouter.get('/', async (request, response) => {
 
 recipesRouter.post('/getBySearch', async (request, response) => {
     const query = request.body.query.trim();
-    const recipes = await Recipe.find({ title: { $regex: query, $options: 'i' } }).populate('user', { username: 1, name: 1, id: 1 });
+    const cookingTimeFilter = request.body.cookingTimeFilter;
+    const ingredientsFilter = request.body.ingredientsFilter ? request.body.ingredientsFilter.trim() : undefined;
+
+    let queryObject = {};
+
+    if (query !== undefined && query !== '') {
+        queryObject.title = { $regex: query, $options: 'i' };
+    }
+
+    if (cookingTimeFilter !== undefined) {
+        queryObject.cookingTime = { $eq: cookingTimeFilter };
+    }
+
+    if (ingredientsFilter !== undefined) {
+        queryObject.ingredients = { $in: ingredientsFilter };
+    }
+
+    const recipes = await Recipe.find(queryObject).populate('user', { username: 1, name: 1, id: 1 });
     if (recipes) {
         response.json(recipes);
     } else {
