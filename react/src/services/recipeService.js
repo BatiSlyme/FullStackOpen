@@ -28,7 +28,7 @@ const getReceipts = async () => {
 }
 
 const getRecipeBySearch = async (query) => {
-    const response = await axios.post(`${baseUrl}/api/recipes/getBySearch`, { query });
+    const response = await axios.post(`${baseUrl}/api/recipes/getBySearch`, query);
     return response.data;
 }
 

@@ -2,50 +2,48 @@ import React, { useEffect, useState } from 'react';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import recipeService from './services/recipeService';
-import axios from 'axios';
-import { LoaderUtil } from './global/loaderUtil';
 
 const RecipeList = ({ recipes, setSelectedRecipe, setRecipe, setShowCreateRecipe, editRef, showOptions, setFilteredRecipes }) => {
-  const [images, setImages] = useState({});
-  const getImg = async (title) => {
-    try {
-      const response = await axios.get(`https://pixabay.com/api/`, {
-        params: {
-          key: '46179411-8ca467e89de390329b1cc9304',
-          q: title, // Search term entered by the user
-          image_type: "photo", // Specify image type (photo, vector, or illustration)
-          per_page: 3, // Number of results to retrieve
-        },
-      });
+  // const [images, setImages] = useState({});
+  // const getImg = async (title) => {
+  //   try {
+  //     const response = await axios.get(`https://pixabay.com/api/`, {
+  //       params: {
+  //         key: '46179411-8ca467e89de390329b1cc9304',
+  //         q: title, // Search term entered by the user
+  //         image_type: "photo", // Specify image type (photo, vector, or illustration)
+  //         per_page: 3, // Number of results to retrieve
+  //       },
+  //     });
 
-      // Extract image URLs from the response
-      // const imageResults = response.data.hits.map((hit) => hit.webformatURL);
-      // setImg(response.data.hits[0].webformatURL);
-      const randomNumber = Math.floor(Math.random() * 2) + 1;
-      console.log('randomNumber', randomNumber);
-      console.log('res', response.data.hits[0].webformatURL);
-      return response.data.hits[0].webformatURL;
-    } catch (error) {
-      console.error("Error fetching images from Pixabay:", error);
-    }
-  }
+  //     // Extract image URLs from the response
+  //     // const imageResults = response.data.hits.map((hit) => hit.webformatURL);
+  //     // setImg(response.data.hits[0].webformatURL);
+  //     const randomNumber = Math.floor(Math.random() * 2) + 1;
+  //     console.log('randomNumber', randomNumber);
+  //     console.log('res', response.data.hits[0].webformatURL);
+  //     return response.data.hits[0].webformatURL;
+  //   } catch (error) {
+  //     console.error("Error fetching images from Pixabay:", error);
+  //   }
+  // }
 
-  useEffect(() => {
-    if (recipes.length === 0) {
-      return;
-    }
-    const fetchImages = async () => {
-      const newImages = {};
-      LoaderUtil.show();
-      for (const recipe of recipes) {
-        newImages[recipe.id] = await getImg(recipe.title);
-      }
-      setImages(newImages);
-      LoaderUtil.hide();
-    };
+  // useEffect(() => {
+  //   if (recipes.length === 0) {
+  //     return;
+  //   }
+  //   const fetchImages = async () => {
+  //     const newImages = {};
+  //     LoaderUtil.show();
+  //     for (const recipe of recipes) {
+  //       newImages[recipe.id] = await getImg(recipe.title);
+  //     }
+  //     setImages(newImages);
+  //     LoaderUtil.hide();
+  //   };
 
-    fetchImages();
-  }, [recipes]);
+  //   fetchImages();
+  // }, [recipes]);
 
   const setEditRecipe = (setRecipe, recipe, setShowCreateRecipe, editRef) => {
     setRecipe(recipe);
@@ -83,7 +81,7 @@ const RecipeList = ({ recipes, setSelectedRecipe, setRecipe, setShowCreateRecipe
             onClick={() => { selectRecipeForDesc(recipe, setSelectedRecipe, setFilteredRecipes) }}
           >
             <h3>{recipe.title}</h3>
-            <img src={images[recipe.id]} alt={recipe.title} />
+            <img src={recipe.img} alt={recipe.title} />
             <div style={{ display: 'flex', justifyContent: 'space-evenly' }}>
               <p>Cooking Time: {recipe.cookingTime}mins</p>
               <p>Servings: {recipe.servings}</p>

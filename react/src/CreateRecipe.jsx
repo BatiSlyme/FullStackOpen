@@ -1,5 +1,7 @@
-import { useEffect, useState } from "react";
-import recipeService from "./services/recipeService";
+import { useEffect, useState } from 'react';
+import recipeService from './services/recipeService';
+import generator from './services/generator';
+import { LoaderUtil } from './global/loaderUtil';
 
 const CreateRecipe = ({ recipes, setFilteredRecipes, setShowCreateRecipe, edit, recipe }) => {
     const [title, setTitle] = useState('');
@@ -8,6 +10,7 @@ const CreateRecipe = ({ recipes, setFilteredRecipes, setShowCreateRecipe, edit, 
     const [servings, setServings] = useState('');
     const [ingredients, setIngredients] = useState('');
     const [error, setError] = useState('');
+    const [img, setImg] = useState('');
 
     const handleTitleChange = (e) => {
         setTitle(e.target.value);
@@ -29,6 +32,10 @@ const CreateRecipe = ({ recipes, setFilteredRecipes, setShowCreateRecipe, edit, 
         setIngredients(e.target.value);
     }
 
+    const handleImgChange = (e) => {
+        setImg(e.target.value);
+    }
+
     useEffect(() => {
         console.log('edit', edit);
         if (edit) {
@@ -37,6 +44,7 @@ const CreateRecipe = ({ recipes, setFilteredRecipes, setShowCreateRecipe, edit, 
             setServings(recipe.servings);
             setCookingTime(recipe.cookingTime);
             setIngredients(recipe.ingredients.join(', '));
+            setImg(recipe.img);
         } else {
             setTitle();
             setContent();
@@ -56,7 +64,8 @@ const CreateRecipe = ({ recipes, setFilteredRecipes, setShowCreateRecipe, edit, 
                 likes: recipe.likes,
                 cookingTime: Number(cookingTime),
                 servings: Number(servings),
-                ingredients: ingArr
+                ingredients: ingArr,
+                img: img
             };
             try {
                 await recipeService.updateReceipt(
@@ -69,12 +78,13 @@ const CreateRecipe = ({ recipes, setFilteredRecipes, setShowCreateRecipe, edit, 
                 setCookingTime('');
                 setIngredients('');
                 setError('');
+                setImg('');
                 setShowCreateRecipe(false);
                 alert('Recipe edited successfully!');
                 setFilteredRecipes((prev) => prev.map((r) => r.id === recipe.id ? { ...r, ...newRecipe } : r));
 
             } catch (error) {
-                console.error("Error creating recipe:", error);
+                console.error('Error creating recipe:', error);
                 setError('Failed to create recipe');
             }
         } else {
@@ -83,7 +93,8 @@ const CreateRecipe = ({ recipes, setFilteredRecipes, setShowCreateRecipe, edit, 
                 content: content,
                 cookingTime: Number(cookingTime),
                 servings: Number(servings),
-                ingredients: ingArr
+                ingredients: ingArr,
+                img: img
             };
             try {
                 await recipeService.createReceipt(newRecipe);
@@ -93,80 +104,116 @@ const CreateRecipe = ({ recipes, setFilteredRecipes, setShowCreateRecipe, edit, 
                 setCookingTime('');
                 setIngredients('');
                 setError('');
+                setImg('');
                 setShowCreateRecipe(false);
                 const copy = [...recipes];
                 copy.push(newRecipe);
                 setFilteredRecipes(copy);
                 alert('Recipe created successfully!');
             } catch (error) {
-                console.error("Error creating recipe:", error);
+                console.error('Error creating recipe:', error);
                 setError('Failed to create recipe');
             }
         }
     }
 
+    const generateImage = async (title) => {
+        LoaderUtil.show();
+        try {
+            if (!title) {
+                setError('Please enter a title for the recipe!');
+                return;
+            }
+
+            const res = await generator.getImg(title);
+            if (res) {
+                setImg(res);
+            }
+        } catch (error) { }
+        finally { LoaderUtil.hide(); }
+    }
+
     return (
-        <div style={{ display: "flex", justifyContent: "center", flexDirection: "column", alignItems: "center" }}>
+        <div style={{ display: 'flex', justifyContent: 'center', flexDirection: 'column', alignItems: 'center' }}>
             {edit ? <h2>Edit {recipe.title}</h2> : <h2>Create a new recipe</h2>}
             <form onSubmit={handleSubmit}>
-                <div className="form-group">
-                    <label htmlFor="title">Title:</label>
+                <div className='form-group'>
+                    <label htmlFor='title'>Title:</label>
                     <input
                         required
-                        type="text"
-                        id="title"
+                        type='text'
+                        id='title'
                         value={title}
                         onChange={handleTitleChange}
                     />
                 </div>
-                <div className="form-group">
-                    <label htmlFor="cookingTime">Cooking Time:</label>
+                <div className='form-group'>
+                    <label htmlFor='cookingTime'>Cooking Time:</label>
                     <textarea
-                        rows="4" cols="50"
+                        rows='4' cols='50'
                         required
-                        type="text"
-                        id="cookingTime"
+                        type='text'
+                        id='cookingTime'
                         value={cookingTime}
                         onChange={handleCookingTimeChange}
                     />
                 </div>
-                <div className="form-group">
-                    <label htmlFor="servings">Servings:</label>
+                <div className='form-group'>
+                    <label htmlFor='servings'>Servings:</label>
                     <textarea
-                        rows="4" cols="50"
+                        rows='4' cols='50'
                         required
-                        type="text"
-                        id="servings"
+                        type='text'
+                        id='servings'
                         value={servings}
                         onChange={handleServingsChange}
                     />
                 </div>
-                <div className="form-group">
-                    <label htmlFor="ingredients">Ingredients:</label>
+                <div className='form-group'>
+                    <label htmlFor='ingredients'>Ingredients:</label>
                     <textarea
-                        rows="4" cols="50"
+                        rows='4' cols='50'
                         required
-                        type="text"
-                        id="ingredients"
+                        type='text'
+                        id='ingredients'
                         value={ingredients}
                         onChange={handleIngredientsChange}
                     />
                 </div>
-                <div className="form-group">
-                    <label htmlFor="content">Content:</label>
+                <div className='form-group'>
+                    <label htmlFor='content'>Content:</label>
                     <textarea
-                        rows="4" cols="50"
+                        rows='4' cols='50'
                         required
-                        type="text"
-                        id="content"
+                        type='text'
+                        id='content'
                         value={content}
                         onChange={handleContentChange}
                     />
                 </div>
-                <button type="submit">Submit</button>
+                <div className='form-group'>
+                    <label htmlFor='image'>Image(URL):</label>
+                    <input
+                        required
+                        type='text'
+                        id='content'
+                        value={img}
+                        onChange={handleImgChange}
+                    />
+                </div>
+                {img &&
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 10 }}>
+                        Image Preview: <img src={img} alt={title} style={{ maxHeight: '20%', maxWidth: '20%' }} />
+                    </div>}
+                <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 10 }}>
+                    <button type='submit'>Submit</button>
+                    <button onClick={() => { generateImage(title) }} type='button'>Generate image for recipe</button>
+                </div>
+
                 {error && <div className='error'>{error}</div>}
-            </form>
-        </div>
+            </form >
+
+        </div >
     );
 }
 
