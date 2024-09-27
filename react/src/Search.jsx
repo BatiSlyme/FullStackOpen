@@ -4,8 +4,9 @@ import { Box, Checkbox, FormControlLabel, FormGroup } from '@mui/material';
 
 const onSearch = async (query, ingredients, cookingTime, setFilteredRecipes, setSelectedRecipe, setShowOptions) => {
     // setLoading(true);
+    const ingCopy = ingredients.split(', ').map((ing) => ing.trim());
     try {
-        const recipes = await receipts.getRecipeBySearch({ query: query, ingredients: ingredients, cookingTime: cookingTime });//await axios.get(`http://localhost:3001/api/recipes`);
+        const recipes = await receipts.getRecipeBySearch({ query: query, ingredients: ingCopy, cookingTime: cookingTime });//await axios.get(`http://localhost:3001/api/recipes`);
         setFilteredRecipes(recipes);
         setSelectedRecipe(recipes.length === 1 ? recipes[0] : undefined);
         setShowOptions(false);
@@ -24,10 +25,8 @@ const Search = ({ setFilteredRecipes, setSelectedRecipe, setShowOptions }) => {
     const handleSubmit = (e) => {
         e.preventDefault();
         console.log('query', query);
-        if (query.trim()) {
-            setSelectedRecipe(undefined);
-            onSearch(query, ingredients, cookingTime, setFilteredRecipes, setSelectedRecipe, setShowOptions);
-        }
+        setSelectedRecipe(undefined);
+        onSearch(query, ingredients, cookingTime, setFilteredRecipes, setSelectedRecipe, setShowOptions);
     };
 
     const handleIngredientsChange = (e) => {
@@ -40,7 +39,7 @@ const Search = ({ setFilteredRecipes, setSelectedRecipe, setShowOptions }) => {
 
     return (
         <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-            <form onSubmit={handleSubmit} className="search-form" style={{ minWidth: '40%' }}>
+            <form onSubmit={handleSubmit} className="search-form" style={{ minWidth: '60%' }}>
                 <input
                     type="text"
                     value={query}
@@ -57,13 +56,18 @@ const Search = ({ setFilteredRecipes, setSelectedRecipe, setShowOptions }) => {
                     />
                 }
                 {showCookingTime &&
-                    <input
-                        type="text"
-                        value={cookingTime}
-                        id='cookingTime'
-                        onChange={handleCookingTimeChange}
-                        placeholder="cooking time"
-                    />
+                    <div style={{ display: 'flex', position: 'relative', flex: 0.5 }} >
+                        <input
+                            type="number"
+                            value={cookingTime}
+                            id='cookingTime'
+                            onChange={handleCookingTimeChange}
+                            placeholder="cooking time"
+                        />
+                        {cookingTime && <label htmlFor='cookingTime' style={{ position: 'absolute', right: '30px', top: '50%', transform: 'translateY(-20%)' }}>
+                            minutes
+                        </label>}
+                    </div>
                 }
                 <button type="submit">Search</button>
             </form>
@@ -74,7 +78,7 @@ const Search = ({ setFilteredRecipes, setSelectedRecipe, setShowOptions }) => {
                         style={{ color: 'white' }}
                         control={<Checkbox
                             style={{ color: 'white' }}
-                            defaultChecked onClick={(e) => {
+                            onClick={(e) => {
                                 if (e.target.checked) {
                                     setShowIngredients(true);
                                 } else {
@@ -89,7 +93,7 @@ const Search = ({ setFilteredRecipes, setSelectedRecipe, setShowOptions }) => {
                         style={{ color: 'white' }}
                         control={<Checkbox
                             style={{ color: 'white' }}
-                            defaultChecked onClick={(e) => {
+                            onClick={(e) => {
                                 if (e.target.checked) {
                                     setShowCookingTime(true);
                                 } else {

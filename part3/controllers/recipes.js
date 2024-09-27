@@ -14,25 +14,25 @@ recipesRouter.get('/', async (request, response) => {
 })
 
 recipesRouter.post('/getBySearch', async (request, response) => {
-    const query = request.body.query.trim();
-    const cookingTimeFilter = request.body.cookingTimeFilter;
-    const ingredientsFilter = request.body.ingredientsFilter ? request.body.ingredientsFilter.trim() : undefined;
+    const query = request.body.query ? request.body.query.trim() : undefined;
+    const cookingTimeFilter = request.body.cookingTime ? request.body.cookingTime : undefined;
+    const ingredientsFilter = request.body.ingredients ? request.body.ingredients : undefined;
 
     let queryObject = {};
 
-    if (query !== undefined && query !== '') {
+    if (query) {
         queryObject.title = { $regex: query, $options: 'i' };
     }
 
-    if (cookingTimeFilter !== undefined) {
-        queryObject.cookingTime = { $eq: cookingTimeFilter };
+    if (cookingTimeFilter) {
+        queryObject.cookingTime = { $lte: cookingTimeFilter };
     }
 
-    if (ingredientsFilter !== undefined) {
+    if (ingredientsFilter && ingredientsFilter.length > 0 && ingredientsFilter.some(ing => Boolean(ing))) {
         queryObject.ingredients = { $in: ingredientsFilter };
     }
 
-    const recipes = await Recipe.find(queryObject).populate('user', { username: 1, name: 1, id: 1 });
+    const recipes = await Recipe.find({ $or: queryObject }).populate('user', { username: 1, name: 1, id: 1 });
     if (recipes) {
         response.json(recipes);
     } else {
