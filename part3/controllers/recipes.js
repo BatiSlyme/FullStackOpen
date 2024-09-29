@@ -29,7 +29,7 @@ recipesRouter.post('/getBySearch', async (request, response) => {
     }
 
     if (ingredientsFilter && ingredientsFilter.length > 0 && ingredientsFilter.some(ing => Boolean(ing))) {
-        queryObject.ingredients = { $in: ingredientsFilter };
+        queryObject.ingredients = { $in: ingredientsFilter.map(ing => ing.trim()) };
     }
 
     const recipes = await Recipe.find({ $or: queryObject }).populate('user', { username: 1, name: 1, id: 1 });

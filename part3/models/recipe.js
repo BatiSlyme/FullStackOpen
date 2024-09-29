@@ -7,6 +7,17 @@ const recipeSchema = new mongoose.Schema({
     title: {
         type: String,
         required: [true, 'Title required'],
+        validate: {
+            validator: function (v) {
+                const words = ["laino", "otrova"];
+                const regex = new RegExp(words.join("|"), 'i');
+                if (regex.test(v)) {
+                    return false;
+                }
+                return true;
+            },
+            message: props => `${props.value} no offensive words or poisonous substances allowed!`
+        }
     },
     author: String,
     content: {

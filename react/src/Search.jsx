@@ -30,7 +30,7 @@ const Search = ({ setFilteredRecipes, setSelectedRecipe, setShowOptions }) => {
     };
 
     const handleIngredientsChange = (e) => {
-        setIngredients(e.target.value.trim());
+        setIngredients(e.target.value);
     }
 
     const handleCookingTimeChange = (e) => {

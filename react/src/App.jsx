@@ -68,7 +68,6 @@ const App = () => {
           setShowOptions={setShowOptions}
           editRef={editRef}
           setShowSingUp={setShowSingUp} />
-
         <Login
           setUser={setUsername}
           showLogin={showLogin}

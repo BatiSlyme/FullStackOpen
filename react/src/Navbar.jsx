@@ -43,11 +43,11 @@ export default function NavBar({
     setShowSingUp
 }) {
     return (
-        <Box sx={{ flexGrow: 1 }}>
+        <Box>
             <AppBar position="sticky">
                 <Toolbar sx={{ display: 'flex', justifyContent: 'space-between' }} >
                     <Box sx={{ display: 'flex', alignContent: 'center', alignItems: 'center' }}>
-                        <IconButton
+                        {/* <IconButton
                             size="large"
                             edge="start"
                             color="inherit"
@@ -55,7 +55,7 @@ export default function NavBar({
                             sx={{ mr: 2 }}
                         >
                             <MenuIcon />
-                        </IconButton>
+                        </IconButton> */}
                         <Typography
                             variant="h6" component="div" sx={{ flexGrow: 1, cursor: 'pointer' }}
                             onClick={() => { getAllRecipes(setReceipts, setShowCreateRecipe, setShowOptions) }}>

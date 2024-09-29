@@ -80,12 +80,17 @@ const RecipeList = ({ recipes, setSelectedRecipe, setRecipe, setShowCreateRecipe
             className="recipe-item"
             onClick={() => { selectRecipeForDesc(recipe, setSelectedRecipe, setFilteredRecipes) }}
           >
-            <h3>{recipe.title}</h3>
-            <img src={recipe.img} alt={recipe.title} />
-            <div style={{ display: 'flex', justifyContent: 'space-evenly' }}>
-              <p>Cooking Time: {recipe.cookingTime}mins</p>
-              <p>Servings: {recipe.servings}</p>
+            <h2><b>{recipe.title}</b> </h2>
+            <div class="recipe-details">
+              <div class="image-container">
+                <img src={recipe.img} alt={recipe.title} />
+              </div>
             </div>
+            <div style={{ display: 'flex', justifyContent: 'space-evenly', gap: '60px' }}>
+              <p>Cooking Time:  <b>{recipe.cookingTime}</b> mins</p>
+              <p>Servings: <b>{recipe.servings}</b> </p>
+            </div>
+
 
           </div>
           {showOptions &&

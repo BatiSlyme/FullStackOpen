@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import recipeService from './services/recipeService';
 import generator from './services/generator';
 import { LoaderUtil } from './global/loaderUtil';
+import data from './filter/Filter';
 
 const CreateRecipe = ({ recipes, setFilteredRecipes, setShowCreateRecipe, edit, recipe }) => {
     const [title, setTitle] = useState('');
@@ -11,6 +12,25 @@ const CreateRecipe = ({ recipes, setFilteredRecipes, setShowCreateRecipe, edit, 
     const [ingredients, setIngredients] = useState('');
     const [error, setError] = useState('');
     const [img, setImg] = useState('');
+
+    function containsBadWord(words) {
+        console.log('words', words);
+        for (const word of words) {
+            console.log('word', word);
+            if (data.filter.isProfane(word)) {
+                setError('No offenisve language allowed!');
+                return true;
+            }
+            if (data.forbiddenIngredients.includes(word)) {
+                setError('No toxic ingredients allowed!');
+                return true;
+            }
+        }
+        setError('');
+
+
+    }
+
 
     const handleTitleChange = (e) => {
         setTitle(e.target.value);
@@ -56,6 +76,9 @@ const CreateRecipe = ({ recipes, setFilteredRecipes, setShowCreateRecipe, edit, 
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        if (containsBadWord([title, content, ingredients])) {
+            return;
+        }
         const ingArr = ingredients.split(', ');
         if (edit) {
             const newRecipe = {
@@ -201,10 +224,11 @@ const CreateRecipe = ({ recipes, setFilteredRecipes, setShowCreateRecipe, edit, 
                         onChange={handleImgChange}
                     />
                 </div>
-                {img &&
-                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 10 }}>
-                        Image Preview: <img src={img} alt={title} style={{ maxHeight: '20%', maxWidth: '20%' }} />
-                    </div>}
+                <div style={{ maxHeight: 400, maxWidth: 500 }}>
+                    {img &&
+                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 10 }}>
+                            Image Preview: <img src={img} alt={title} style={{ maxHeight: '20%', maxWidth: '20%' }} />
+                        </div>}</div>
                 <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 10 }}>
                     <button type='submit'>Submit</button>
                     <button onClick={() => { generateImage(title) }} type='button'>Generate image for recipe</button>
