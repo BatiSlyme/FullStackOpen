@@ -81,7 +81,7 @@ const RecipeList = ({ recipes, setSelectedRecipe, setRecipe, setShowCreateRecipe
             onClick={() => { selectRecipeForDesc(recipe, setSelectedRecipe, setFilteredRecipes) }}
           >
             <h2><b>{recipe.title}</b> </h2>
-            <div class="recipe-details">
+            <div class="recipe-list-details">
               <div class="image-container">
                 <img src={recipe.img} alt={recipe.title} />
               </div>

@@ -21,7 +21,6 @@ const getAllRecipes = async (setReceipts, setShowCreateRecipe, setShowOptions) =
     } finally {
         LoaderUtil.hide();
     }
-
 }
 
 const getMyRecipes = async (setReceipts, setShowCreateRecipe, setShowOptions) => {
