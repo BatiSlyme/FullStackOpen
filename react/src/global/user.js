@@ -19,7 +19,7 @@ export class User {
 
     static set userName(value) {
         if (this._userName !== value) {
-            this._user = value;
+            this._userName = value;
         }
     }
 

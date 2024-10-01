@@ -6,7 +6,9 @@ const Logout = ({ setUsername }) => {
     const logout = async (setUsername) => {
         setUsername(undefined);
         await recipeService.logout();
-        User.token = undefined;
+        User._token = undefined;
+        User._userName = undefined;
+        window.localStorage.removeItem('loggedUser');
     };
 
     return (

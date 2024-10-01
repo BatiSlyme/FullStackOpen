@@ -12,6 +12,7 @@ import recipeService from './services/recipeService';
 import CircularProgress from '@mui/material/CircularProgress';
 import Loader from './Loader';
 import SignUp from './SignUp';
+import { User } from './global/user';
 
 const App = () => {
   const [selectedRecipe, setSelectedRecipe] = useState();
@@ -25,16 +26,16 @@ const App = () => {
   const [showSingUp, setShowSingUp] = useState(false);
   const editRef = useRef();
 
-  const selectRecipe = async (id) => {
-    setLoading(true);
-    try {
-      const content = await recipeService.getReceiptById(id);
-      setSelectedRecipe(content.content);
-    } catch (error) {
-      console.error("Error fetching recipe details:", error);
+  useEffect(() => {
+    const loggedUserJSON = window.localStorage.getItem('loggedUser')
+    if (loggedUserJSON) {
+      const user = JSON.parse(loggedUserJSON)
+      // console.log('user', user);
+      User._token = user.token;
+      User._userName = user.username;
+      setUsername(user.name);
     }
-    setLoading(false);
-  };
+  }, []);
 
   useEffect(() => {
     // setShowCreateRecipe(filteredRecipes.length > 0);

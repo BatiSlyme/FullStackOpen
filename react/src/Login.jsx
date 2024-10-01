@@ -25,7 +25,9 @@ const Login = ({ setUser, showLogin, setShowLogin }) => {
             const login = await recipeService.login(username, password);
             setError('');
             setUser(login.name);
-            User.token = login.token;
+            window.localStorage.setItem('loggedUser', JSON.stringify(login));
+            User._token = login.token;
+            User._userName = login.username;
             setShowLogin(false)
             setUsername();
             setPassword();
