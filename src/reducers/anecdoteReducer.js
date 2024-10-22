@@ -1,4 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit'
+import { useDispatch } from 'react-redux'
+import anecdoteService from '../services/anecdoteService'
+import { clear, notify, notifyWithTimeout } from './notificationsReducer'
 
 // const anecdotesAtStart = [
 //   'If it hurts, do it more often',
@@ -80,6 +83,32 @@ const anecdoteSlice = createSlice({
 })
 
 export const { vote, create, setAnecdotes } = anecdoteSlice.actions;
+
+export const initializeAnecdotes = () => {
+  return async dispatch => {
+    const anecdotes = await anecdoteService.getAnecdotes();
+    dispatch(setAnecdotes(anecdotes));
+  };
+};
+
+export const createAnecdote = (content) => {
+  return async dispatch => {
+    console.log('createAnecdote called', content);
+    await anecdoteService.postAnecdote((content));
+    dispatch(create(content));
+    dispatch(notifyWithTimeout(`you created '${content}'`, 5));
+  };
+};
+
+export const voteAnecdote = (payload) => {
+  return async dispatch => {
+    console.log('voteAnecdote called', payload);
+    await anecdoteService.updateAnecdote(payload.id, { ...payload, votes: payload.votes + 1 });
+    dispatch(vote(payload.id))
+    dispatch(notifyWithTimeout(`you voted '${payload.content}'`, 5));
+  }
+}
+
 export default anecdoteSlice.reducer;
 
 

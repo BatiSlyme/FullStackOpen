@@ -1,24 +1,9 @@
 import { useSelector, useDispatch } from 'react-redux'
-import { create, vote, setAnecdotes } from '../reducers/anecdoteReducer';
+import { createAnecdote, voteAnecdote } from '../reducers/anecdoteReducer';
 import Filter from './Filter';
 import Notification from './Notification';
-import { clear, notify } from '../reducers/notificationsReducer';
-import { useEffect } from 'react';
-import anecdoteService from '../services/anecdoteService';
 
 const AnecdoteForm = () => {
-    const dispatch = useDispatch()
-
-    useEffect(() => {
-        async function getAnecdotes() {
-            const res = await anecdoteService.getAnecdotes();
-            dispatch(setAnecdotes(res));
-        }
-
-        getAnecdotes();
-    }, []);
-
-
     console.log('state is:', useSelector(state => state.anecdotes));
     let anecdotes = useSelector(state => [...state.anecdotes].sort((a, b) => b.votes - a.votes));
     const filter = useSelector(state => state.filter);
@@ -26,15 +11,21 @@ const AnecdoteForm = () => {
     if (filter !== 'ALL') {
         anecdotes = anecdotes.filter(anecdote => anecdote.content.includes(filter));
     }
-    const createAnecdote = (e) => {
+
+    const dispatch = useDispatch()
+
+    const create = (e) => {
         e.preventDefault();
         const content = e.target.content.value;
+        console.log('content is:', content);
+        dispatch(createAnecdote(content));
         e.target.content.value = '';
-        dispatch(create(content));
-        anecdoteService.postAnecdote(content);
-        dispatch(notify(`you created '${content}'`));
-        setTimeout(() => { dispatch(clear(content)); }, 5000);
     }
+
+    const vote = (payload) => {
+        dispatch(voteAnecdote(payload));
+    }
+
     return (
         <div>
             <h2>Anecdotes</h2>
@@ -47,16 +38,12 @@ const AnecdoteForm = () => {
                     </div>
                     <div>
                         has {anecdote.votes}
-                        <button onClick={() => {
-                            dispatch(vote(anecdote.id))
-                            dispatch(notify(`you voted '${anecdote.content}'`));
-                            setTimeout(() => { dispatch(clear(anecdote.id)); }, 5000);
-                        }}>vote</button>
+                        <button onClick={() => { vote(anecdote); }}>vote</button>
                     </div>
                 </div>
             )}
             <h2>create new</h2>
-            <form onSubmit={createAnecdote}>
+            <form onSubmit={create}>
                 <div><input name="content" /></div>
                 <button type='submit'>create</button>
             </form>
